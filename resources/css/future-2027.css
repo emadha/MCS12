@@ -1,0 +1,267 @@
+/* Future 2027 Design System */
+
+/* Aurora Palette - Shifting colors inspired by aurora borealis */
+:root {
+    --color-aurora-1: 135 226 249; /* Ethereal blue #87e2f9 */
+    --color-aurora-2: 111 209 243; /* Bright blue #6fd1f3 */
+    --color-aurora-3: 78 187 232; /* Deep sky #4ebbe8 */
+    --color-aurora-4: 85 165 242; /* True blue #55a5f2 */
+    --color-aurora-5: 94 143 254; /* Electric blue #5e8ffe */
+    --color-aurora-6: 106 121 255; /* Vibrant blue-violet #6a79ff */
+    --color-aurora-7: 122 103 255; /* Deep violet #7a67ff */
+    --color-aurora-8: 149 91 240; /* Purple #955bf0 */
+    --color-aurora-9: 176 80 222; /* Magenta #b050de */
+    --color-aurora-10: 192 82 192; /* Pink-purple #c052c0 */
+
+    /* Neo Plasma Palette - Vibrant, high-energy colors */
+    --color-plasma-1: 255 78 187; /* Hot pink #ff4ebb */
+    --color-plasma-2: 255 93 143; /* Bright pink #ff5d8f */
+    --color-plasma-3: 255 106 111; /* Coral #ff6a6f */
+    --color-plasma-4: 255 128 82; /* Peach #ff8052 */
+    --color-plasma-5: 255 156 69; /* Orange #ff9c45 */
+    --color-plasma-6: 254 184 55; /* Amber #feb837 */
+    --color-plasma-7: 242 203 51; /* Yellow #f2cb33 */
+    --color-plasma-8: 215 219 58; /* Lime #d7db3a */
+    --color-plasma-9: 170 228 71; /* Green #aae447 */
+    --color-plasma-10: 126 231 102; /* Light green #7ee766 */
+
+    /* Bio Luminescent Palette - Glow-in-dark inspired */
+    --color-lumi-1: 45 247 220; /* Bright teal #2df7dc */
+    --color-lumi-2: 62 235 196; /* Teal #3eebc4 */
+    --color-lumi-3: 81 224 179; /* Sea green #51e0b3 */
+    --color-lumi-4: 80 209 202; /* Aqua #50d1ca */
+    --color-lumi-5: 80 195 225; /* Sky blue #50c3e1 */
+    --color-lumi-6: 85 173 245; /* Bright blue #55adf5 */
+    --color-lumi-7: 120 160 255; /* Blue #78a0ff */
+    --color-lumi-8: 144 151 255; /* Periwinkle #9097ff */
+    --color-lumi-9: 164 143 255; /* Lavender #a48fff */
+    --color-lumi-10: 184 134 255; /* Purple #b886ff */
+
+    /* Quantum Gradients */
+    --gradient-quantum-1: linear-gradient(135deg, rgb(var(--color-aurora-1)), rgb(var(--color-aurora-5)), rgb(var(--color-aurora-9)));
+    --gradient-quantum-2: linear-gradient(135deg, rgb(var(--color-plasma-2)), rgb(var(--color-plasma-5)), rgb(var(--color-plasma-8)));
+    --gradient-quantum-3: linear-gradient(135deg, rgb(var(--color-lumi-1)), rgb(var(--color-lumi-4)), rgb(var(--color-lumi-9)));
+    --gradient-quantum-4: linear-gradient(135deg, rgb(var(--color-aurora-3)), rgb(var(--color-plasma-3)));
+    --gradient-quantum-5: linear-gradient(135deg, rgb(var(--color-plasma-7)), rgb(var(--color-lumi-7)));
+    --gradient-quantum-6: linear-gradient(135deg, rgb(var(--color-lumi-2)), rgb(var(--color-aurora-7)));
+
+    /* Glass Effects */
+    --glass-white: rgba(255, 255, 255, 0.1);
+    --glass-white-heavy: rgba(255, 255, 255, 0.2);
+    --glass-black: rgba(0, 0, 0, 0.1);
+    --glass-black-heavy: rgba(0, 0, 0, 0.2);
+    --glass-blur: 12px;
+    --glass-blur-light: 8px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* Shadows & Effects */
+    --shadow-small: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --shadow-large: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --shadow-glow-blue: 0 0 15px rgba(var(--color-aurora-6), 0.5);
+    --shadow-glow-purple: 0 0 15px rgba(var(--color-aurora-9), 0.5);
+    --shadow-glow-pink: 0 0 15px rgba(var(--color-plasma-1), 0.5);
+    --shadow-glow-teal: 0 0 15px rgba(var(--color-lumi-1), 0.5);
+
+    /* Futuristic 2027 Spacings */
+    --space-quantum: 0.5rem;
+    --space-nano: 0.25rem;
+    --space-micro: 0.125rem;
+    --radius-pill: 9999px;
+    --radius-blob: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    --radius-soft: 12px;
+    --radius-softer: 16px;
+    --radius-curved: 24px;
+}
+
+/* Light 2027 Theme */
+.light-2027 {
+    --color-bg-primary: var(--color-white);
+    --color-bg-secondary: var(--color-gray-50);
+    --color-bg-tertiary: var(--color-gray-100);
+    --color-bg-accent: var(--color-aurora-6);
+    --color-bg-accent-alt: var(--color-lumi-1);
+
+    --color-text-primary: var(--color-gray-900);
+    --color-text-secondary: var(--color-gray-700);
+    --color-text-tertiary: var(--color-gray-500);
+    --color-text-accent: var(--color-aurora-7);
+    --color-text-on-accent: var(--color-white);
+
+    --color-border-primary: var(--color-gray-200);
+    --color-border-secondary: var(--color-gray-300);
+    --color-border-accent: var(--color-aurora-5);
+
+    --color-input-border: var(--color-gray-200);
+    --color-input-focus-border: var(--color-aurora-5);
+    --color-input-focus-ring: var(--color-aurora-4);
+
+    --color-button-primary-bg: var(--color-aurora-6);
+    --color-button-primary-text: var(--color-white);
+    --color-button-primary-hover: var(--color-aurora-7);
+
+    --color-button-secondary-bg: var(--color-white);
+    --color-button-secondary-text: var(--color-gray-800);
+    --color-button-secondary-border: var(--color-gray-200);
+    --color-button-secondary-hover: var(--color-gray-50);
+
+    --color-shadow: 0 0 0 / 0.08;
+}
+
+/* Dark 2027 Theme */
+.dark-2027 {
+    --color-bg-primary: 14 21 37; /* #0e1525 - Deep space */
+    --color-bg-secondary: 19 28 47; /* #131c2f - Cosmic blue */
+    --color-bg-tertiary: 24 35 57; /* #182339 - Deep navy */
+    --color-bg-accent: var(--color-aurora-6);
+    --color-bg-accent-alt: var(--color-lumi-3);
+
+    --color-text-primary: 235 240 248; /* #ebf0f8 - Stellar white */
+    --color-text-secondary: 199 210 230; /* #c7d2e6 - Lunar grey */
+    --color-text-tertiary: 149 167 199; /* #95a7c7 - Cosmic grey */
+    --color-text-accent: var(--color-aurora-4);
+    --color-text-on-accent: var(--color-white);
+
+    --color-border-primary: 34 48 73; /* #223049 - Space border */
+    --color-border-secondary: 43 59 85; /* #2b3b55 - Deep border */
+    --color-border-accent: var(--color-aurora-5);
+
+    --color-input-border: 43 59 85; /* #2b3b55 */
+    --color-input-focus-border: var(--color-aurora-5);
+    --color-input-focus-ring: var(--color-aurora-5);
+
+    --color-button-primary-bg: var(--color-aurora-6);
+    --color-button-primary-text: var(--color-white);
+    --color-button-primary-hover: var(--color-aurora-7);
+
+    --color-button-secondary-bg: 19 28 47; /* #131c2f */
+    --color-button-secondary-text: 235 240 248; /* #ebf0f8 */
+    --color-button-secondary-border: 34 48 73; /* #223049 */
+    --color-button-secondary-hover: 24 35 57; /* #182339 */
+
+    --color-shadow: 0 0 0 / 0.3;
+}
+
+/* Blob button animation */
+@keyframes blob-morph {
+    0% { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
+    25% { border-radius: 40% 60% 30% 70% / 50% 60% 40% 50%; }
+    50% { border-radius: 30% 70% 70% 30% / 40% 40% 60% 50%; }
+    75% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    100% { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
+}
+
+/* Ambient glow animation */
+@keyframes ambient-glow {
+    0% { box-shadow: 0 0 10px 1px rgba(var(--color-aurora-4), 0.4); }
+    25% { box-shadow: 0 0 15px 2px rgba(var(--color-aurora-6), 0.5); }
+    50% { box-shadow: 0 0 20px 2px rgba(var(--color-aurora-8), 0.6); }
+    75% { box-shadow: 0 0 15px 2px rgba(var(--color-aurora-6), 0.5); }
+    100% { box-shadow: 0 0 10px 1px rgba(var(--color-aurora-4), 0.4); }
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+    0% { background-position: -100% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Futuristic Component Classes */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius-soft);
+}
+
+.glass-panel-dark {
+    background: rgba(14, 21, 37, 0.7);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid rgba(43, 59, 85, 0.3);
+    border-radius: var(--radius-soft);
+}
+
+.neo-button {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgb(var(--color-aurora-5)), rgb(var(--color-aurora-7)));
+    color: white;
+    border-radius: var(--radius-soft);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(var(--color-aurora-7), 0.3);
+    transition: all 0.3s ease;
+}
+
+.neo-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--color-aurora-7), 0.4);
+}
+
+.neo-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(var(--color-aurora-7), 0.3);
+}
+
+.neo-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transition: all 0.6s ease;
+}
+
+.neo-button:hover::before {
+    left: 100%;
+}
+
+.neo-input {
+    background: rgba(var(--color-bg-secondary), 0.5);
+    border: 1px solid rgba(var(--color-border-primary), 0.8);
+    border-radius: var(--radius-soft);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.neo-input:focus {
+    border-color: rgba(var(--color-aurora-5), 0.8);
+    box-shadow: 0 0 0 3px rgba(var(--color-aurora-5), 0.2);
+    background: rgba(var(--color-bg-secondary), 0.8);
+}
+
+.blob-button {
+    position: relative;
+    border-radius: var(--radius-blob);
+    animation: blob-morph 8s ease-in-out infinite;
+}
+
+.ambient-glow {
+    animation: ambient-glow 4s infinite ease-in-out;
+}
+
+.shimmer-text {
+    background: linear-gradient(
+        90deg,
+        rgba(var(--color-aurora-3), 0.7) 0%,
+        rgba(var(--color-aurora-6), 0.9) 30%,
+        rgba(var(--color-aurora-9), 0.7) 50%,
+        rgba(var(--color-aurora-6), 0.9) 70%,
+        rgba(var(--color-aurora-3), 0.7) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 6s linear infinite;
+}

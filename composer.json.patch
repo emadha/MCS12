@@ -1,0 +1,7 @@
+Add to require section: "spatie/laravel-permission": "^6.3"
+
+Run the following commands:
+1. composer require spatie/laravel-permission
+2. php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+3. php artisan migrate
+4. php artisan db:seed --class=SuperAdminSeeder
