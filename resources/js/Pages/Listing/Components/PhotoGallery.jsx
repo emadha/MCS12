@@ -72,7 +72,7 @@ export default function PhotoGallery ({ className, photos }) {
             case 'make_primary': {
                 setModalData({
                     content: <ConfirmForm action={action}
-                                          item={loadedPhotos[primaryPhoto] ?? loadedPhotos[selected]}/>,
+                                          item={loadedPhotos[selected]}/>,
                 })
                 setModalShow(true)
                 break
@@ -82,7 +82,7 @@ export default function PhotoGallery ({ className, photos }) {
                     content: <ConfirmForm
                         onSuccess={(updatedPhoto) => {setLoadedPhotos(loadedPhotos.filter(p => p.name !== loadedPhotos[primaryPhoto].name))}}
                         action={'delete'}
-                        item={loadedPhotos[primaryPhoto] ?? loadedPhotos[0]}/>,
+                        item={loadedPhotos[0]}/>,
                 })
                 setModalShow(true)
                 break
@@ -93,7 +93,7 @@ export default function PhotoGallery ({ className, photos }) {
                     content: <ConfirmForm
                         onSuccess={(updatedPhoto) => {setLoadedPhotos(loadedPhotos.map(p => p.name === updatedPhoto.name ? updatedPhoto : p))}}
                         action={loadedPhotos[primaryPhoto].published ? 'unpublish' : 'publish'}
-                        item={loadedPhotos[primaryPhoto] ?? loadedPhotos[0]}/>,
+                        item={loadedPhotos[0]}/>,
                 })
                 setModalShow(true)
                 break

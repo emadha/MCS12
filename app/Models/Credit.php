@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\CreditObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stripe\Coupon;
@@ -11,6 +13,7 @@ use Stripe\Coupon;
  *
  * @property null|\App\Models\User $user
  */
+#[ObservedBy([CreditObserver::class])]
 class Credit extends Model
 {
     use HasFactory;

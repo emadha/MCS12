@@ -47,7 +47,7 @@ class BalanceController extends Controller
             ]);
         }
 
-        $user->notifyNow(new UserCredited($BalanceUpdated));
+        $user->notify(new UserCredited($BalanceUpdated));
 
         // Some addition for git, remove late..
         return $BalanceUpdated;

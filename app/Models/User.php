@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Enum\ProfileStatus;
+use App\Observers\UserObserver;
 use App\Traits\HasAlbums;
 use App\Traits\HasFollowers;
 use App\Traits\HasGarage;
 use App\Traits\HasPhotos;
 use App\Traits\HasShowroom;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,6 +33,7 @@ use stdClass;
  * @property HasMany $credits
  * @method static Model|Collection|Builder[]|Builder|null find(mixed $id, array|string $columns = ['*'])  find(array|bool|string|null $id)
  */
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements MustVerifyEmail
 {
 
@@ -86,13 +89,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts
         = [
             'email_verified_at' => 'datetime',
-            'activity_at'       => 'datetime',
-            'login_at'          => 'datetime',
+            'activity_at' => 'datetime',
+            'login_at' => 'datetime',
         ];
 
     public function scopeCanBeMessaged(Builder $q)
     {
-        $q->whereHas('userPrefs', function ($q) {});
+        $q->whereHas('userPrefs', function ($q) {
+        });
     }
 
     public function scopeIsActive(Builder $q)
@@ -124,7 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return $display;
         }
 
-        $display->name = $this->first_name.' '.$this->last_name;
+        $display->name = $this->first_name . ' ' . $this->last_name;
 
         return $display;
     }
@@ -149,7 +153,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return asset(
             'assets/photos/u/'
-            .$ProfilePicture?->filename
+            . $ProfilePicture?->filename
         );
     }
 
@@ -164,7 +168,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @param  int|null  $limit
+     * @param int|null $limit
      *
      * @return mixed
      */

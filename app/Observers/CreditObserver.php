@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Models\Credit;
 use App\Notifications\Credit\UserCredited;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
 
 class CreditObserver
 {
@@ -17,7 +16,9 @@ class CreditObserver
     {
         // todo incomplete, now coins is off so no need to notify user
         //  but the email and notification must be finished first.
-        // $credit->user->notifyNow(new UserCredited($credit));
+//        if (env('CREDITS_ENABLED')) {
+//            $credit->user->notify(new UserCredited($credit));
+//        }
     }
 
     /**

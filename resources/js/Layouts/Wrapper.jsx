@@ -53,6 +53,11 @@ export default function Wrapper({children}) {
         withXSRFToken: true,
     })
 
+    api.interceptors.request.use(async config => {
+        await axios.get('/sanctum/csrf-cookie')
+        return config
+    })
+
     api.interceptors.response.use((response) => {
         return response
     }, (error) => {
@@ -372,7 +377,7 @@ export default function Wrapper({children}) {
     }
 
     return <div
-        className={'scroll-smooth duration-300 transition-all dark:bg-neutral-900 min-h-screen bg-neutral-100 dark:text-white ' +
+        className={'scroll-smooth duration-300 transition-all min-h-screen ' +
             (isSidebarOpen ? 'sm:max-h-max max-h-screen sm:overflow-visible overflow-hidden' : '')}>
 
         <Head>

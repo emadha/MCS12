@@ -20,29 +20,33 @@ class StatsController extends Controller
     /**
      * Add Stats to model
      *
-     * @param  string  $type  must be from StatsEnum
-     * @param  \App\Models\Base  $model
-     * @param  \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable|null  $user
-     * @param  string|null  $note
+     * @param string $type must be from StatsEnum
+     * @param \App\Models\Base $model
+     * @param \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable|null $user
+     * @param string|null $note
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
     public static function create(string $type, Base $model, User|Authenticatable $user = null, string $note = null): Model
     {
+        if (!$model->id) {
+            throw new Exception('Trying to record stats for model ' . get_class($model) . ' but the model is invalid');
+        }
+
         if (!in_array($type, StatsEnum::names())) {
-            throw new Exception('Trying to record stats for model '.get_class($model).' but the type is invalid');
+            throw new Exception('Trying to record stats for model ' . get_class($model) . ' but the type is invalid');
         }
 
         if (!in_array(HasStats::class, class_uses($model))) {
-            throw new Exception('Trying to record stats for model '.get_class($model).', but it does not uses HasStats trait.');
+            throw new Exception('Trying to record stats for model ' . get_class($model) . ', but it does not uses HasStats trait.');
         }
 
         return $model->stats()->create([
-            'uuid'    => Uuid::uuid8(session()->getId()),
+            'uuid' => Uuid::uuid8(session()->getId()),
             'user_id' => $user?->id,
-            'type'    => $type,
-            'note'    => $note,
+            'type' => $type,
+            'note' => $note,
         ]);
     }
 

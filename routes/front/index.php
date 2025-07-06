@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'/routes/auth.php';
 
 Route::domain(config('app.domains.lb'))->group(function () {
+    Route::get('test',function(){
+        \Illuminate\Support\Facades\Mail::to('emad.haa@gmail.com')->send(( new \App\Mail\TestMail()));
+    });
     Route::get(null, [Controller::class, 'index'])->name('index.lb');
 });
 

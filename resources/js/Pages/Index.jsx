@@ -1,23 +1,24 @@
-import { Link, usePage } from '@inertiajs/react'
-import { useContext, useEffect, useRef, useState } from 'react'
+import {Link, usePage} from '@inertiajs/react'
+import {useContext, useEffect, useState} from 'react'
 import ListingContainer from '@/Components/Listing/ListingContainer'
-import { AppContext } from '@/AppContext'
-import { faPlugCirclePlus, faSpinner, faUpload } from '@fortawesome/free-solid-svg-icons'
+import {AppContext} from '@/AppContext'
+import {faPlugCirclePlus, faSpinner, faUpload} from '@fortawesome/free-solid-svg-icons'
 import ShopBlock from '@/Pages/Shops/Components/ShopBlock'
 import FlipWords from '@/Components/UI/flipwords'
 import SecondaryButton from '@/Components/Form/Buttons/SecondaryButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import SimpleListingItemBlock from '@/Components/Listing/Blocks/SimpleListingItemBlock'
 
-export default function Index ({
-    shops, latest_items = [], total = [],
-}) {
-    const { lang, setNavbarTransparent, formatNumbers } = useContext(AppContext)
-    const { auth } = usePage().props
+export default function Index({
+                                  shops, latest_items = [], total = [],
+                              }) {
+    const {lang, setNavbarTransparent, formatNumbers} = useContext(AppContext)
+    const {auth} = usePage().props
     const [show, setShow] = useState(true)
     const [loadingShowrooms, setLoadingShowrooms] = useState(true)
     const [showrooms, setShowrooms] = useState([])
     const [promotedShowrooms, setPromotedShowrooms] = useState([])
+    const {api} = useContext(AppContext)
 
     useEffect(e => {
         const urlSearchParams = new URLSearchParams(location.search)
@@ -36,11 +37,11 @@ export default function Index ({
 
     const goToListingContainer = () => {
         setTimeout(() => {
-            document.getElementById('listingBlock')?.scrollIntoView({ behavior: 'smooth' })
+            document.getElementById('listingBlock')?.scrollIntoView({behavior: 'smooth'})
         }, 100)
     }
 
-    const PageBlock = ({ className, children }) => {
+    const PageBlock = ({className, children}) => {
         return <div className={'container my-5 p-2' + (className ? ' ' + className : '')}>
             <div className={'bg-grad-primary backdrop-blur-xl shadow py-5 px-10 rounded'}>
                 {children}
@@ -49,7 +50,7 @@ export default function Index ({
     }
     useEffect(() => {
         setLoadingShowrooms(true)
-        axios.post(route('api.showrooms')).then(res => {
+        api.get(route('api.showrooms')).then(res => {
             setShowrooms(res.data.showrooms)
             setPromotedShowrooms(res.data.promoted)
         }).finally(f => setLoadingShowrooms(false))
@@ -62,7 +63,8 @@ export default function Index ({
                     <div className={'container flex flex-wrap mx-auto justify-end items-center min-h-[70vh]'}>
 
                         <h1 className={'z-10 select-none text-center px-3 md:text-8xl rtl:text-7xl md:rtl:text-8xl lg:rtl:text-9xl text-5xl w-full mix-blend-overlay mt-36 max-w-screen drop-shadow-xl overflow-hidden'}>
-                            <FlipWords beforeText={lang('Mecarshop')} className={'text-white absolute flex justify-center w-full'} words={[
+                            <FlipWords beforeText={lang('Mecarshop')}
+                                       className={'text-white absolute flex justify-center w-full'} words={[
                                 lang('Marketplace'),
                                 lang('Showrooms'),
                                 lang('Rental'),
@@ -74,7 +76,8 @@ export default function Index ({
                                 lang('Service'),
                                 lang('Information'),
                             ]}/>
-                            <small className={'-mt-24 md:-mt-3 text-sm rtl:text-center mb-5 md:rtl:-mt-24 lg:rtl:-mt-1 rtl:-mt-32 px-1 w-full block font-thin'}>
+                            <small
+                                className={'-mt-24 md:-mt-3 text-sm rtl:text-center mb-5 md:rtl:-mt-24 lg:rtl:-mt-1 rtl:-mt-32 px-1 w-full block font-thin'}>
                                 {lang('SLOGAN_SUB_SUB')}
                             </small>
                         </h1>
@@ -103,12 +106,14 @@ export default function Index ({
                     <div className={'relative z-[20] container mx-auto px-5 my-20 drop-shadow-xl'}>
                         {loadingShowrooms ?
                             <div className={'flex items-center min-h-52 justify-center select-none'}>
-                                <FontAwesomeIcon size={'2xl'} icon={faSpinner} className={'mx-5'} spin={true}/> Getting Showrooms...
+                                <FontAwesomeIcon size={'2xl'} icon={faSpinner} className={'mx-5'} spin={true}/> Getting
+                                Showrooms...
                             </div>
                             : <>
                                 <div className={'flex items-center justify-between'}>
                                     <h2 className={'select-none -mt-2'}>{lang('Showrooms')}</h2>
-                                    {auth?.user && <SecondaryButton icon={faPlugCirclePlus}>Create Your Own Showroom</SecondaryButton>}
+                                    {auth?.user && <SecondaryButton icon={faPlugCirclePlus}>Create Your Own
+                                        Showroom</SecondaryButton>}
                                 </div>
 
                                 {
@@ -116,7 +121,8 @@ export default function Index ({
                                 }
 
                                 {
-                                    showrooms.map(showroom => <div className={'w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 aspect-square'}>
+                                    showrooms.map(showroom => <div
+                                        className={'w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 aspect-square'}>
                                         <ShopBlock shop={showroom}/>
                                     </div>)
                                 }
@@ -125,7 +131,7 @@ export default function Index ({
                     </div>
                 </div>
                 <ListingContainer type={'cars'} hasSearch={true}/>
-            </div> :<></>}
+            </div> : <></>}
 
         </div>
     </>

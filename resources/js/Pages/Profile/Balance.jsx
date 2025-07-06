@@ -1,16 +1,17 @@
 import PageContainer from '@/Layouts/PageContainer'
 import Field from '@/Components/Form/Field'
 import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton'
-import { faAdd, faFileCsv, faFilePdf, faGift } from '@fortawesome/free-solid-svg-icons'
+import {faAdd, faFileCsv, faFilePdf, faGift} from '@fortawesome/free-solid-svg-icons'
 import AppLink from '@/Components/AppLink'
 
-import { useContext, useState } from 'react'
-import { AppContext } from '@/AppContext'
-import { Head, Link } from '@inertiajs/react'
+import {useContext, useState} from 'react'
+import {AppContext} from '@/AppContext'
+import {Head, Link} from '@inertiajs/react'
 import Hr from '@/Components/Hr'
+import {clsx} from "clsx";
 
-export default function Balance({ title, balance }) {
-    const { lang, rtl } = useContext(AppContext)
+export default function Balance({title, balance}) {
+    const {lang, rtl} = useContext(AppContext)
     const [isLoaded, setIsLoaded] = useState(false)
     return <PageContainer title={lang('Your Balance')} className={''}>
 
@@ -23,9 +24,9 @@ export default function Balance({ title, balance }) {
                     <th colSpan={5} className={'px-5'}>
                         <div className={'flex justify-between w-full py-5'}>
 
-              <span>{lang('Balance')} <strong className={'text-purple-500'}>
-                {balance.sum ?? 0}</strong> {lang(balance.sum > 1 ? 'Point' : 'Points')}
-              </span>
+                            <span>{lang('Balance')} <strong className={'text-purple-500'}>
+                                {balance.sum ?? 0}</strong> {lang(balance.sum > 1 ? 'Point' : 'Points')}
+                            </span>
 
                             <div className={'flex space-x-2 items-center justify-end divide-x divide-neutral-700'}>
                                 <div className={'flex gap-x-2'}>
@@ -59,14 +60,17 @@ export default function Balance({ title, balance }) {
                     <td className={'text-sm ' + (rtl ? 'text-right' : 'text-left')}>
                         {credit.target_text
                             ? credit.target_link
-                                ? <AppLink className={'text-blue-800 dark:text-blue-500 hover:!text-blue-400 transition-all'}
-                                           href={credit.target_link}>{credit.target_text}</AppLink>
-                                : <span className={'select-none dark:text-neutral-600 line-through'}>{credit.target_text}</span>
+                                ? <AppLink
+                                    className={'text-blue-800 dark:text-blue-500 hover:!text-blue-400 transition-all'}
+                                    href={credit.target_link}>{credit.target_text}</AppLink>
+                                : <span
+                                    className={'select-none dark:text-neutral-600 line-through'}>{credit.target_text}</span>
                             : <>-</>
                         }
                     </td>
                     <td className={'w-min ' + (rtl ? 'text-left' : 'text-right')}>
-                        <span dir={'ltr '} className={(parseInt(credit.amount) > 0 ? ' text-lime-600 ' : ' text-red-400 ')}>{credit.amount}</span>
+                        <span dir={'ltr '}
+                              className={(parseInt(credit.amount) > 0 ? ' text-lime-600 ' : ' text-red-400 ')}>{credit.amount}</span>
                     </td>
                     <td className={'px-5 w-min whitespace-nowrap ' + (rtl ? 'text-left' : 'text-right')}>{credit.created_at}</td>
                 </tr>)}
@@ -79,13 +83,17 @@ export default function Balance({ title, balance }) {
             className={'flex select-none flex-wrap justify-center my-5 items-center space-x-0.5 text-center'}>
 
             {balance.data.meta.links && balance.data.meta.links.map(link => <Link
+                as={'div'}
                 key={'l_' + link.label}
-                href={link.url}
+                href={link.url ?? ''}
+                disabled={!!!link.url}
                 preserveScroll={true}
-                className={'px-5 py-2 transition-all ' + ' rounded text-sm whitespace-nowrap' +
-                    (link.active ? ' active bg-red-500 dark:bg-red-800 text-white ' : ' dark:hover:bg-neutral-700 hover:bg-neutral-200' + ' disabled:!bg-transparent disabled:opacity-10')}
+                className={clsx('px-5 py-2 transition-all rounded text-sm whitespace-nowrap',
+                    link.active ? 'active bg-red-500 text-white dark:bg-red-800' : ' ',
+                    link.url ? '  cursor-pointer dark:hover:bg-neutral-700 hover:bg-neutral-200' : ' disabled opacity-10 bg-transparent'
+                )}
 
-                dangerouslySetInnerHTML={{ __html: lang(link.label) }}/>)}
+                dangerouslySetInnerHTML={{__html: lang(link.label)}}/>)}
             <div className={'mx-auto p-10 text-xs text-center dark:text-neutral-600 text-neutral-400'}>
                 {lang('Found a total of ')} {balance.data.meta?.total} {lang('item(s)')}
             </div>

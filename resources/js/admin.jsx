@@ -1,27 +1,30 @@
-import './bootstrap'
-import '../css/app.css'
+import '../css/app.css';
+import './bootstrap';
 
-import { createRoot } from 'react-dom/client'
-import { createInertiaApp } from '@inertiajs/react'
-import AdminWrapper from '@/Layouts/AdminWrapper'
+import {createInertiaApp} from '@inertiajs/react';
+import {createRoot, hydrateRoot} from 'react-dom/client';
+import Wrapper from "@/Layouts/Wrapper.jsx";
+import AdminWrapper from "@/Layouts/AdminWrapper.jsx";
 
-// const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel'
-axios.defaults.withCredentials = true
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 
 createInertiaApp({
-    title: (title) => `${title}`, resolve: (name, t) => {
-        const pages = import.meta.glob('./Admin/Pages/**/*.jsx', { eager: true })
+    title: (title) => `${title} - ${appName}`,
+    resolve: name => {
+        const pages = import.meta.glob('./Admin/Pages/**/*.jsx', {eager: true})
         let page = pages[`./Admin/Pages/${name}.jsx`]
-        console.log(pages, name,page)
-        page.default.layout = page?.default?.layout || (page => {
-            return <AdminWrapper children={page}/>
-        })
-
+        page.default.layout = page.default.layout || (page => <AdminWrapper children={page}/>)
         return page
-    }, setup ({ el, App, props }) {
-        const root = createRoot(el)
-        root.render(<App {...props} />)
-    }, progress: {
-        color: '#03b283', showSpinner: true,
     },
-})
+    setup({el, App, props}) {
+        if (import.meta.env.SSR) {
+            hydrateRoot(el, <App {...props} />);
+            return;
+        }
+
+        createRoot(el).render(<App {...props} />);
+    },
+    progress: {
+        color: '#4B5563',
+    },
+});

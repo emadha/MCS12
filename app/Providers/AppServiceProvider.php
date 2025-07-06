@@ -76,7 +76,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Route::bind('listing_frontend', function (string $item) {
-            dd('not working');
             $listingItem = ListingItem::with(['photos', 'contacts', 'shop'])
                 ->find($item)
                 ?->setAppends(['primary_photo', 'cover_photo', 'display']);
