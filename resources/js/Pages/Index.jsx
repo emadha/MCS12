@@ -1,13 +1,12 @@
-import {Link, usePage} from '@inertiajs/react'
+import {usePage} from '@inertiajs/react'
 import {useContext, useEffect, useState} from 'react'
 import ListingContainer from '@/Components/Listing/ListingContainer'
 import {AppContext} from '@/AppContext'
-import {faPlugCirclePlus, faSpinner, faUpload} from '@fortawesome/free-solid-svg-icons'
+import {faPlugCirclePlus, faSpinner} from '@fortawesome/free-solid-svg-icons'
 import ShopBlock from '@/Pages/Shops/Components/ShopBlock'
-import FlipWords from '@/Components/UI/flipwords'
 import SecondaryButton from '@/Components/Form/Buttons/SecondaryButton'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import SimpleListingItemBlock from '@/Components/Listing/Blocks/SimpleListingItemBlock'
+import HeroSection from "@/Components/HeroSection.jsx";
 
 export default function Index({
                                   shops, latest_items = [], total = [],
@@ -59,48 +58,8 @@ export default function Index({
     return <>
         <div className={'transition-all h-full w-full relative'}>
             {show ? <div className={'z-10 '}>
-                <div className={'bg-slate-500/10 px-5'}>
-                    <div className={'container flex flex-wrap mx-auto justify-end items-center min-h-[70vh]'}>
 
-                        <h1 className={'z-10 select-none text-center px-3 md:text-8xl rtl:text-7xl md:rtl:text-8xl lg:rtl:text-9xl text-5xl w-full mix-blend-overlay mt-36 max-w-screen drop-shadow-xl overflow-hidden'}>
-                            <FlipWords beforeText={lang('Mecarshop')}
-                                       className={'text-white absolute flex justify-center w-full'} words={[
-                                lang('Marketplace'),
-                                lang('Showrooms'),
-                                lang('Rental'),
-                                lang('Tuning'),
-                                lang('Accessories'),
-                                lang('Detailing'),
-                                lang('Parts'),
-                                lang('Paint'),
-                                lang('Service'),
-                                lang('Information'),
-                            ]}/>
-                            <small
-                                className={'-mt-24 md:-mt-3 text-sm rtl:text-center mb-5 md:rtl:-mt-24 lg:rtl:-mt-1 rtl:-mt-32 px-1 w-full block font-thin'}>
-                                {lang('SLOGAN_SUB_SUB')}
-                            </small>
-                        </h1>
-                        <div className={'z-10 flex flex-wrap items-center mx-auto mt-5 justify-center w-full'}>
-                            {latest_items.data?.map(latest_item =>
-                                <div className={'w-1/2 md:w-1/5 p-2'}
-                                     key={'_latest' + latest_item.title}>
-                                    <SimpleListingItemBlock item={latest_item}/>
-                                </div>,
-                            )}
-                        </div>
-                        <div className={'w-full flex justify-center my-16 py-10 z-10'}>
-                            <Link className={'w-full md:w-1/3 max-w-screen'}
-                                  href={route('listing.car.submit')}>
-                                <SecondaryButton
-                                    className={'animate-pop-in py-5 !text-xl transition-all rounded-md hover:rounded-xl shadow-lg hover:shadow-xl !px-10 w-full !bg-yellow-600 hover:!bg-orange-500 text-white dark:hover:text-slate-600 !text-center'}
-                                    icon={faUpload}>
-                                    {lang('List your Car')}
-                                </SecondaryButton>
-                            </Link></div>
-                    </div>
-
-                </div>
+                <HeroSection latestItems={latest_items.data ?? []}/>
 
                 <div className={'my-5'}>
                     <div className={'relative z-[20] container mx-auto px-5 my-20 drop-shadow-xl'}>

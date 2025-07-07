@@ -115,10 +115,8 @@ class ListingItemController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Inertia\Response
      */
-    public function single(Request $request, $condition, $listing_car): RedirectResponse|Response
+    public function single(Request $request, $condition,ListingItem $listing_frontend): RedirectResponse|Response
     {
-        $listing_frontend = ListingItem::where('id', explode('-', $listing_car)[0])
-            ->firstOrFail();
 
         if (($request->url() !== $listing_frontend->item->links->item) && $listing_frontend->item?->links?->item) {
             return Redirect::to($listing_frontend->item->links->item, ResponseAlias::HTTP_MOVED_PERMANENTLY);

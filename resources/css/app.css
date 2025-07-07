@@ -85,7 +85,7 @@
 
 @layer base {
     * {
-        @apply border-border;
+
     }
 
     html {
@@ -93,7 +93,7 @@
     }
 
     body {
-        @apply bg-background text-foreground font-sans;
+        @apply bg-background text-foreground;
         overflow-x: hidden;
     }
 
@@ -162,7 +162,7 @@
     }
 
     /* Elegant floating */
-    .float{
+    .float {
         animation: float 8s ease-in-out infinite;
     }
 
@@ -321,18 +321,23 @@
     .delay-100 {
         animation-delay: 0.1s;
     }
+
     .delay-200 {
         animation-delay: 0.2s;
     }
+
     .delay-300 {
         animation-delay: 0.3s;
     }
+
     .delay-400 {
         animation-delay: 0.4s;
     }
+
     .delay-500 {
         animation-delay: 0.5s;
     }
+
     .delay-600 {
         animation-delay: 0.6s;
     }
@@ -386,7 +391,7 @@
 }
 
 h1, h2, h3, h4, h5, h6 {
-    @apply font-bold dark:text-neutral-200 my-10
+    @apply font-light dark:text-neutral-200 my-10
 }
 
 h1 {
@@ -398,7 +403,7 @@ h2 {
 }
 
 h3 {
-    @apply sm:text-2xl text-lg mb-2
+    @apply sm:text-3xl text-lg mb-2
 }
 
 h4 {

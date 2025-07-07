@@ -45,6 +45,7 @@
         "qr-code-styling": "^1.9.2",
         "react-dropzone": "^14.3.8",
         "react-hot-toast": "^2.5.2",
-        "tailwindcss-animate": "^1.0.7"
+        "tailwindcss-animate": "^1.0.7",
+        "vite-plugin-pwa": "^1.0.1"
     }
 }

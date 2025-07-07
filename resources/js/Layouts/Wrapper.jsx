@@ -5,6 +5,8 @@ import {useEffect, useState} from 'react'
 import {AppContext} from '@/AppContext'
 import NotAuthorized from '@/Components/Modals/NotAuthorized'
 import defaultTheme from 'tailwindcss/defaultTheme'
+import InstallPWAButton from '@/Components/InstallPWAButton';
+import OfflineIndicator from '@/Components/OfflineIndicator';
 
 import MessageDialog from '@/Components/Modals/MessageDialog'
 import {Inertia} from '@inertiajs/inertia'
@@ -396,7 +398,7 @@ export default function Wrapper({children}) {
                         <Footer/>
                     </div>
                 </div>
-
+                <InstallPWAButton />
                 <MessageDialog show={modalShow} data={modalData}/>
             </div>
         </AppContext.Provider>

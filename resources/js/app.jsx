@@ -4,6 +4,7 @@ import './bootstrap';
 import {createInertiaApp} from '@inertiajs/react';
 import {createRoot, hydrateRoot} from 'react-dom/client';
 import Wrapper from "@/Layouts/Wrapper.jsx";
+import {registerPWA} from "@/pwa.jsx";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 
@@ -21,6 +22,8 @@ createInertiaApp({
             return;
         }
 
+        // Register the PWA service worker
+        registerPWA();
         createRoot(el).render(<App {...props} />);
     },
     progress: {

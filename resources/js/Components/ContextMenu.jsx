@@ -18,7 +18,6 @@ export default function ContextMenu ({
         // Used to not call axios if you're clicking to close the menu
         if (open) {
             e.preventDefault()
-            close()
             return false
         }
         // Set context menu text whilst loading

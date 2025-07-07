@@ -1,4 +1,6 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import InstallPWAButton from '@/Components/InstallPWAButton';
+import OfflineIndicator from '@/Components/OfflineIndicator';
 import { Link } from '@inertiajs/react';
 
 export default function GuestLayout({ children }) {

@@ -21,8 +21,8 @@ module.exports = {
         },
         extend: {
             fontFamily: {
-                sans: ["Inter var", "sans-serif"],
-                display: ["Satoshi", "Poppins", "sans-serif"],
+                sans: ["Fira Sans", "sans-serif"],
+                display: ["Poppins", "sans-serif"],
                 mono: ["JetBrains Mono", "Fira Code", "monospace"],
             },
             colors: {
@@ -60,22 +60,14 @@ module.exports = {
                     foreground: "hsl(var(--card-foreground))",
                 },
             },
-            borderRadius: {
-                lg: "var(--radius)",
-                md: "calc(var(--radius) - 2px)",
-                sm: "calc(var(--radius) - 4px)",
-                xl: "calc(var(--radius) + 4px)",
-                "2xl": "calc(var(--radius) + 8px)",
-                "3xl": "calc(var(--radius) + 12px)",
-            },
             keyframes: {
                 "accordion-down": {
-                    from: { height: 0 },
-                    to: { height: "var(--radix-accordion-content-height)" },
+                    from: {height: 0},
+                    to: {height: "var(--radix-accordion-content-height)"},
                 },
                 "accordion-up": {
-                    from: { height: "var(--radix-accordion-content-height)" },
-                    to: { height: 0 },
+                    from: {height: "var(--radix-accordion-content-height)"},
+                    to: {height: 0},
                 },
                 "fade": {
                     "0%": {
@@ -108,12 +100,12 @@ module.exports = {
                     },
                 },
                 "wiggle": {
-                    "0%, 100%": { transform: "rotate(-0.5deg)" },
-                    "50%": { transform: "rotate(0.5deg)" },
+                    "0%, 100%": {transform: "rotate(-0.5deg)"},
+                    "50%": {transform: "rotate(0.5deg)"},
                 },
                 shimmer: {
-                    "0%": { transform: "translateX(-100%)" },
-                    "100%": { transform: "translateX(100%)" },
+                    "0%": {transform: "translateX(-100%)"},
+                    "100%": {transform: "translateX(100%)"},
                 },
             },
             animation: {

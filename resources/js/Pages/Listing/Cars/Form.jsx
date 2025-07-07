@@ -898,7 +898,7 @@ export default function Form ({ title, item, cost, contactMethods = [], settings
                                                                  onErrorClick={() => selectStep(STEP_LOCATION)}
                                                                  error={errors.location}
                                                                  value={usedShowroom ? 'Taken from showroom location' : searchDefaultFields.locations.filter(
-                                                                     l => l.id === location ?? 0)[0]?.name ?? '_'}/>
+                                                                     l => l.id === (location ?? 0))[0]?.name ?? '_'}/>
 
 
                                             <StepConfirmTableRow title={lang('Contact Method')} htmlValue={
