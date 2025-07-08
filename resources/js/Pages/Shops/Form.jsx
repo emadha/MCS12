@@ -29,6 +29,7 @@ import {faFacebookF, faInstagram, faWhatsapp} from '@fortawesome/free-brands-svg
 import Contacts from '@/Components/Contacts'
 import GoogleMapComponent from '@/Components/GoogleMapComponent'
 import MainButton from '@/Components/Form/Buttons/MainButton'
+import {clsx} from "clsx";
 
 let usernameCheckTimeOut = null
 export default function Form({
@@ -212,13 +213,8 @@ export default function Form({
         MOBILE: faMobileAlt,
     }
 
-    const ContactAddForm = ({contactTypes, value}) => {
-        const [step, setStep] = useState(0)
-    }
-
     return <PageContainer title={title} subtitle={shop?.data?.id ? 'Shop ID #' + shop.data.id : 'New Shop'}
                           mainClassName={'flex mx-auto'}>
-
 
         {Object.values(errors).length ? Object.values(errors).length && <Alert type={'danger'}>
             {Object.values(errors).map(err => <div key={err}>{err}</div>)}
@@ -261,7 +257,7 @@ export default function Form({
             </Field>
 
             <div className={'flex flex-wrap'}>
-                <Field className={'w-full lg:w-1/2'} title={lang('Details')}>
+                <div className={'w-full lg:w-1/2'}>
                     <Field title={lang('Shop Title')} className={'my-5'}>
                         <InputError message={errors.title} className="mt-2"/>
                         <p className={'text-xs mb-2'}>Choose a clear and descriptive title for your shop that customers
@@ -321,8 +317,10 @@ export default function Form({
                                 <div className={'sm:w-1/2 w-full p-1 max-w-xs'}>
                                     <MainButton
                                         key={predefined_location.id}
-                                        className={'w-full border rounded text-neutral-500' +
-                                            (data.predefined_location.id == predefined_location.id ? ' bg-violet-700 text-white ' : '')}
+                                        className={
+                                            clsx('w-full',
+                                                data.predefined_location.id == predefined_location.id ? ' bg-violet-700 text-white ' : ''
+                                            )}
                                         onClick={e => setData('predefined_location', predefined_location) | clearErrors('predefined_location')}
                                     >
                                         <FontAwesomeIcon icon={faCheckCircle}
@@ -362,7 +360,7 @@ export default function Form({
                         </div>
                     </Field>
                     <Hr/>
-                </Field>
+                </div>
                 <div className={'w-full lg:w-1/2 lg:px-10 px-0'}>
                     <Field title={lang('Map')} className={'w-full'}>
                         <GoogleMapComponent
@@ -371,7 +369,6 @@ export default function Form({
                             setGeoLocationMessage={setGeoLocationMessage}
                             setLoadingGeoLocation={setLoadingGeoLocation}/>
                     </Field>
-
                     <Hr/>
                     <Field className={''} title={lang('Contact')}>
                         <InputError message={errors.contacts} className="mt-2"/>

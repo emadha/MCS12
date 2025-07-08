@@ -1,35 +1,39 @@
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
-import { createRef, useCallback, useRef, useState } from 'react'
+import {GoogleMap, useJsApiLoader} from '@react-google-maps/api'
+import {useCallback, useRef, useState} from 'react'
+import Loading from "@/Components/Loading.jsx";
 
-export default function GoogleMapComponent ({
-    api, handleOnClick,
-    geoLocationMessage, setGeoLocationMessage = () => {},
-    geoLocation, setGeoLocation = () => {},
-}) {
+export default function GoogleMapComponent({
+                                               api, handleOnClick,
+                                               geoLocationMessage, setGeoLocationMessage = () => {
+    }, onMapLoad = () => {
+    },
+                                               geoLocation, setGeoLocation = () => {
+    },
+                                           }) {
 
     let marker
 
     const [loadingGeoLocation, setLoadingGeoLocation] = useState(false)
     const [locationText, setLocationText] = useState('')
-    const { isLoaded } = useJsApiLoader(
+    const {isLoaded} = useJsApiLoader(
         {
             id: 'google-map-script',
-            googleMapsApiKey: 'AIzaSyCpIlM2Y42rd5paOz7ubQZSVE0mPJzxraI',
+            googleMapsApiKey: 'AIzaSyAFCIcdWoLA-zQDCSYMzKfzDu1Q3sXhwr0',
         })
 
     const [map, setMap] = useState(null)
     const [position, setPosition] = useState(null)
     const mapTextRef = useRef()
-    const onLoad = useCallback(function callback (map) {
+    const onLoad = useCallback(function callback(map) {
 
         navigator?.geolocation.getCurrentPosition(
-            ({ coords: { latitude: lat, longitude: lng } }) => {
+            ({coords: {latitude: lat, longitude: lng}}) => {
                 if (lat && lng) {
-                    const pos = { lat, lng }
+                    const pos = {lat, lng}
                     map.setCenter(pos)
                 }
             }, () => {
-                map.setCenter({ lat: 0, lng: 0 })
+                map.setCenter({lat: 0, lng: 0})
             },
         )
 
@@ -43,7 +47,7 @@ export default function GoogleMapComponent ({
                 setLoadingGeoLocation(true)
                 setGeoLocationMessage('Loading')
 
-                return axios.post(route('geocode', { 'latlng': latLngString })).then(res => {
+                return axios.post(route('geocode', {'latlng': latLngString})).then(res => {
                     handleOnClick(res.data)
                     setGeoLocation(() => res.data[0])
                     setLoadingGeoLocation(false)
@@ -60,7 +64,7 @@ export default function GoogleMapComponent ({
         setMap(map)
     }, [])
 
-    function placeMarker (position, map) {
+    function placeMarker(position, map) {
         if (marker) {
             return marker.setPosition(position)
         }
@@ -71,13 +75,14 @@ export default function GoogleMapComponent ({
         })
     }
 
-    const onUnmount = useCallback(function callback (map) {
+    const onUnmount = useCallback(function callback(map) {
         setMap(null)
     }, [])
 
     return isLoaded ? (
         <div className={''}>
-            <div className={'select-none py-2 px-4 border dark:border-neutral-600 dark:bg-neutral-700 bg-neutral-100 rounded mb-2'}>
+            <div
+                className={'select-none empty:py-2 px-4 border dark:border-neutral-600 dark:bg-neutral-700 bg-neutral-100 rounded mb-2'}>
                 {loadingGeoLocation ?
                     <div className={''}>
                         Loading
@@ -88,7 +93,7 @@ export default function GoogleMapComponent ({
                 }
             </div>
             <GoogleMap
-                mapContainerStyle={{ width: '100%', height: '650px' }}
+                mapContainerStyle={{width: '100%', height: '650px'}}
                 zoom={15}
                 mapContainerClassName={'w-full'}
                 onLoad={onLoad}
@@ -97,5 +102,5 @@ export default function GoogleMapComponent ({
                 <></>
             </GoogleMap>
         </div>
-    ) : <></>
+    ) : <Loading/>
 }

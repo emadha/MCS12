@@ -6,7 +6,6 @@ import {AppContext} from '@/AppContext'
 import NotAuthorized from '@/Components/Modals/NotAuthorized'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import InstallPWAButton from '@/Components/InstallPWAButton';
-import OfflineIndicator from '@/Components/OfflineIndicator';
 
 import MessageDialog from '@/Components/Modals/MessageDialog'
 import {Inertia} from '@inertiajs/inertia'
@@ -30,36 +29,26 @@ export default function Wrapper({children}) {
     const url = usePage().url
 
     const [wrapperLoading, setWrapperLoading] = useState(true)
-
     const [darkMode, setDarkMode] = useState((localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)))
-
-    const [locale, _setLocale] = useState(document.cookie.locale || navigator.language)
-
     const [automaticSize, setAutomaticSize] = useState(true)
     const [hasSidebar, setHasSidebar] = useState(null)
-
     const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= parseInt(defaultTheme.screens.lg))
-
     const [navbarTransparent, setNavbarTransparent] = useState(false)
-
     const [userPrefs, setUserPrefs] = useState({})
-
     const [notAuthorizedModal, setNotAuthorizedModal] = useState(false)
     const [modalShow, setModalShow] = useState(false)
     const [modalData, setModalData] = useState({title: null, content: null})
-
     const [mainWindowScroll, setMainWindowScroll] = useState(false)
+
     const api = axios.create({
         url: '/api',
         withCredentials: true,
         withXSRFToken: true,
     })
-
     api.interceptors.request.use(async config => {
         await axios.get('/sanctum/csrf-cookie')
         return config
     })
-
     api.interceptors.response.use((response) => {
         return response
     }, (error) => {
@@ -73,29 +62,24 @@ export default function Wrapper({children}) {
 
         return Promise.reject(error)
     })
-
     const protectedApi = axios.create({
         url: '/api',
         withCredentials: true,
         withXSRFToken: true,
     })
-
     protectedApi.interceptors.request.use(async config => {
         await axios.get('/sanctum/csrf-cookie')
         return config
     })
-
     protectedApi.interceptors.response.use((response) => {
         return response
     }, (error) => {
-
         if (error.response.status === 401) {
             setModalShow(true)
             setModalData({
                 title: lang('NOT_AUTHORIZED_TITLE'), content: <NotAuthorized/>,
             })
         }
-
         return Promise.reject(error)
     })
 
@@ -398,7 +382,7 @@ export default function Wrapper({children}) {
                         <Footer/>
                     </div>
                 </div>
-                <InstallPWAButton />
+                <InstallPWAButton/>
                 <MessageDialog show={modalShow} data={modalData}/>
             </div>
         </AppContext.Provider>

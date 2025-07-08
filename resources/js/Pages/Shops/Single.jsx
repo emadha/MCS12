@@ -20,10 +20,11 @@ import {Inertia} from '@inertiajs/inertia'
 import SkeletonListingBlockItem from '@/Components/SkeletonListingBlockItem'
 import {createTheme} from '@mui/material/styles'
 import {lime, red} from '@mui/material/colors'
+import ShopLayout from "@/Layouts/ShopLayout.jsx";
 
-export default function Single ({ title, shop, unique_makes = [], unique_models = [] }) {
+export default function Single({title, shop, unique_makes = [], unique_models = []}) {
     const urlParams = new URLSearchParams(window.location.search)
-    const { lang, setModalData, setModalShow } = useContext(AppContext)
+    const {lang, setModalData, setModalShow} = useContext(AppContext)
     const [loadedShop, setLoadedShop] = useState(shop.data)
     const [loadingShopListings, setLoadingShopListings] = useState(true)
     const [shopListings, setShopListings] = useState([])
@@ -35,7 +36,7 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
     const [shopListingPage, setShopListingPage] = useState(urlParams.get('page'))
 
     const [statsVisits, setStatsVisits] = useState([])
-    const { user } = usePage().props.auth
+    const {user} = usePage().props.auth
 
     const updateShop = (updatedItem) => {
         setLoadedShop(updatedItem)
@@ -60,14 +61,15 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
         fetchListing()
 
         // Get shop stats
-        axios.get(route('shop.stats.visits.graph', { shop: loadedShop.id })).then(r => setStatsVisits(r.data?.data))
+        axios.get(route('shop.stats.visits.graph', {shop: loadedShop.id})).then(r => setStatsVisits(r.data?.data))
     }, [selectedShopListingMakes, selectedShopListingModels])
 
     const contextOnClick = (action) => {
         switch (action) {
             case 'delete': {
                 setModalData({
-                    content: <ConfirmForm onSuccess={() => removeListingItem(item.id)} action={'delete'} item={loadedShop}/>,
+                    content: <ConfirmForm onSuccess={() => removeListingItem(item.id)} action={'delete'}
+                                          item={loadedShop}/>,
                 })
                 setModalShow(true)
                 break
@@ -86,7 +88,7 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
             }
             case 'list_item': {
                 Inertia.visit(
-                    route('listing.car.submit', { shop: loadedShop.id }),
+                    route('listing.car.submit', {shop: loadedShop.id}),
                 )
                 break
             }
@@ -126,17 +128,17 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
         'OTHER': 'Other',
     }
 
-    const ContactsBlock = ({ contacts = [] }) => <>
+    const ContactsBlock = ({contacts = []}) => <>
         {
             contacts.map((contact, i) => <div key={i} className={'flex mx-1 text-sm my-1'}>
-                            <span className={'flex items-center text-xs text-neutral-400 w-1/12'}>
-                                <FontAwesomeIcon className={'text-xs'} icon={contactIcons[contact.method]}/>
-                            </span>
+                <span className={'flex items-center text-xs text-neutral-400 w-1/12'}>
+                    <FontAwesomeIcon className={'text-xs'} icon={contactIcons[contact.method]}/>
+                </span>
                 <strong dir={'ltr'}>{contact.value}</strong>
             </div>)
         }</>
 
-    const LocationBlock = ({ location }) =>
+    const LocationBlock = ({location}) =>
         <div>
             <p>Longitutde: {location.long}</p>
             <p>Latitude: {location.lat}</p>
@@ -151,13 +153,14 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
             secondary: lime,
         },
     })
-    return <>
+    return <ShopLayout shop={shop}>
         {shop ? <div className={'container p-10'}>
             <div className={'relative mt-20'}>
                 {!loadedShop?.is_approved &&
                     <Alert className={'my-5'} type={'danger'}>
                         <p>Shop is currently under review and is not active.</p>
-                        <small>Inactive shop will not be displayed to the public, you are the only one who can see this page.</small>
+                        <small>Inactive shop will not be displayed to the public, you are the only one who can see this
+                            page.</small>
                     </Alert>}
                 <div className={'w-full h-full relative'}>
                     <div className={'w-full h-full absolute'}>
@@ -184,7 +187,8 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
                                 </div>
                             </div>
                         </div>
-                        <ContextMenu text={lang('Options')} className={'absolute right-5 top-5'} h={loadedShop.h} onClick={contextOnClick}/>
+                        <ContextMenu text={lang('Options')} className={'absolute right-5 top-5'} h={loadedShop.h}
+                                     onClick={contextOnClick}/>
                     </div>
                 </div>
 
@@ -202,12 +206,15 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
                             <small>{loadedShop.created_at}</small>
                         </div>
 
-                        <div className={'flex space-x-2 items-center p-2 select-none dark:text-neutral-500'} title={lang('Created by')}>
-                            <FontAwesomeIcon icon={faUser} className={'text-xs dark:text-neutral-500'}>Created</FontAwesomeIcon>
+                        <div className={'flex space-x-2 items-center p-2 select-none dark:text-neutral-500'}
+                             title={lang('Created by')}>
+                            <FontAwesomeIcon icon={faUser}
+                                             className={'text-xs dark:text-neutral-500'}>Created</FontAwesomeIcon>
                             <small>{loadedShop.user.name}</small>
                         </div>
 
-                        <div className={'flex space-x-2 items-center p-2 select-none dark:text-neutral-500'} title={lang('View Stats')}>
+                        <div className={'flex space-x-2 items-center p-2 select-none dark:text-neutral-500'}
+                             title={lang('View Stats')}>
                             <FontAwesomeIcon icon={faUser} className={'text-xs dark:text-neutral-500'}/>
                             <Link href={route('shop.single.stats', loadedShop.id)}><small>View stats</small></Link>
                         </div>
@@ -239,19 +246,19 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
                             <span className={'text-xs text-neutral-500'}>Available Car Makes</span>
                             <div className={'flex items-center flex-wrap'}>
                                 {Object.keys(shopListingMakes).map((m, i) => <span
-                                    key={i}
-                                    onClick={(e) => {
-                                        setSelectedShopListingMakes([m])
-                                        setSelectedShopListingModels([])
-                                        if (selectedShopListingMakes.includes(m)) {
-                                            setSelectedShopListingMakes([])
-                                        }
-                                    }}
-                                    className={'px-1 underline text-sm cursor-pointer hover:font-bold ' +
-                                        (selectedShopListingMakes.includes(m) ? ' font-extrabold ' : '')
-                                    }>
-                                    {unique_makes[m]}
-                                        </span>,
+                                        key={i}
+                                        onClick={(e) => {
+                                            setSelectedShopListingMakes([m])
+                                            setSelectedShopListingModels([])
+                                            if (selectedShopListingMakes.includes(m)) {
+                                                setSelectedShopListingMakes([])
+                                            }
+                                        }}
+                                        className={'px-1 underline text-sm cursor-pointer hover:font-bold ' +
+                                            (selectedShopListingMakes.includes(m) ? ' font-extrabold ' : '')
+                                        }>
+                                        {unique_makes[m]}
+                                    </span>,
                                 )}</div>
                         </div>
 
@@ -270,8 +277,8 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
                                         className={'px-1 underline text-sm cursor-pointer hover:font-bold ' +
                                             (selectedShopListingModels.includes(m) ? ' font-extrabold ' : '')
                                         }>
-                                    {unique_models[m]}
-                                </span>,
+                                        {unique_models[m]}
+                                    </span>,
                                 )}
                             </div>
                         </div>
@@ -292,13 +299,14 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
                             </div>)}
 
                             {shopListingsMeta.meta === undefined || shopListingsMeta.meta?.links?.length === 3 // 3 because prev current next (so no more pages)
-                                ? <p className={'text-center text-xs w-full select-none mt-10 opacity-50'}>That is all.</p>
+                                ? <p className={'text-center text-xs w-full select-none mt-10 opacity-50'}>That is
+                                    all.</p>
                                 : <div className={'flex flex-wrap justify-center items-center w-full gap-x-5'}>
                                     {Object.values(shopListingsMeta.meta?.links).map((meta, i) =>
                                         <div key={i}>
                                             <Link
                                                 preserveScroll={true}
-                                                dangerouslySetInnerHTML={{ __html: meta.label }}
+                                                dangerouslySetInnerHTML={{__html: meta.label}}
                                                 href={meta.url}
                                             />
                                         </div>)
@@ -312,5 +320,5 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
         </div> : <>
             <PageContainer className={'text-center'}>Invalid Page</PageContainer>
         </>}
-    </>
+    </ShopLayout>
 }

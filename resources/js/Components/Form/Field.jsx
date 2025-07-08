@@ -18,11 +18,12 @@ export default function Field({key, className, legendClassName, children, title,
 
         {title ?
             <fieldset className={'relative '}>
-                <legend className={'w-full italic cursor-pointer px-3 py-2 '
-                    + (collapsable ? ' hover:bg-green-500/10 transition-all rounded ' : '')
-                    + (isOpen ? ' font-bold' : '')
-                    + (legendClassName ? ' ' + legendClassName : '')}
-                        onClick={collapse}>
+                <legend className={
+                    clsx('w-full uppercase text-xs font-light select-none',
+                        legendClassName,
+                        collapsable ? 'hover:bg-green-500/10 transition-all rounded cursor-pointer' : '',
+                        isOpen ? 'font-bold' : '')
+                } onClick={collapse}>
                     <span className={'flex items-center'}>
                         {collapsable ? <FontAwesomeIcon icon={isOpen ? faAngleUp : faAngleDown}
                                                         className={'mt-1 pr-2 block'}/> : <></>}
