@@ -161,7 +161,7 @@ export default function Single ({ title, shop, unique_makes = [], unique_models 
                     </Alert>}
                 <div className={'w-full h-full relative'}>
                     <div className={'w-full h-full absolute'}>
-                        <img src={'https://picsum.photos/id/611/1200'} className={'rounded-xl w-full h-full object-cover'}/>
+                        <img src={'https://picsum.photos/1200'} className={'rounded-xl w-full h-full object-cover'}/>
                     </div>
                     <div className={'flex items-start sticky top-32 duration-1000 bottom-0 h-full w-full'}>
 

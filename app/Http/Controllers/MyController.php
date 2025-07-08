@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Functions;
-use App\Http\Resources\FrontendMyResource;
 use App\Http\Resources\ListingItem\ListingItemBlocksResource;
 use App\Http\Resources\Shop\ShopBlockResource;
-use App\Http\Resources\Shops\ShopResource;
 use App\Models\Shop;
 use App\Models\ShopType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use League\CommonMark\Extension\CommonMark\Node\Block\ListItem;
 
 class MyController extends Controller
 {

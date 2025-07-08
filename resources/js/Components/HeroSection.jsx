@@ -42,11 +42,19 @@ function HeroSection({latestItems}) {
                 </p>
 
                 <Hr className={'mt-10'}/>
+
                 <PrimaryButton
                     onClick={() => document.getElementById('listingBlock')?.scrollIntoView({behavior: 'smooth'})}
                     size={'xl'} icon={faList} className={'mx-auto mt-10 mb-20'}>
                     {lang('Browse Cars')}
                 </PrimaryButton>
+                <Link
+                    href={route('shops.index')}
+                    size={'xl'} icon={faList} className={'mx-auto mt-10 mb-20'}>
+                    {lang('Browse Shops')}
+                </Link>
+
+
                 <div className={'my-10 flex justify-center gap-10 items-center select-none'}>
 
                     <Link className={'text-2xl py-2'}

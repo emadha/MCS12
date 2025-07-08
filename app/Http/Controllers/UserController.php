@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ListingItem\ListingItemBlocksResource;
-use App\Http\Resources\Shops\ShopResource;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserSearchBoxResource;
 use App\Models\User;
-use App\Models\UserPref;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;

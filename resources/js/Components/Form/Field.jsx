@@ -1,9 +1,10 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
-import { Transition } from '@headlessui/react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faAngleDown, faAngleUp} from '@fortawesome/free-solid-svg-icons'
+import {useState} from 'react'
+import {Transition} from '@headlessui/react'
+import {clsx} from "clsx";
 
-export default function Field ({ key, className, legendClassName, children, title, collapsable = false }) {
+export default function Field({key, className, legendClassName, children, title, collapsable = false}) {
     const [isOpen, setIsOpen] = useState(true)
     const collapse = () => {
         if (!collapsable) {
@@ -13,7 +14,7 @@ export default function Field ({ key, className, legendClassName, children, titl
         setIsOpen(!isOpen)
     }
 
-    return <div className={'my-2 ' + (className ? ' ' + className : '')}>
+    return <div className={clsx('my-2 ', className)}>
 
         {title ?
             <fieldset className={'relative '}>
@@ -23,7 +24,8 @@ export default function Field ({ key, className, legendClassName, children, titl
                     + (legendClassName ? ' ' + legendClassName : '')}
                         onClick={collapse}>
                     <span className={'flex items-center'}>
-                        {collapsable ? <FontAwesomeIcon icon={isOpen ? faAngleUp : faAngleDown} className={'mt-1 pr-2 block'}/> : <></>}
+                        {collapsable ? <FontAwesomeIcon icon={isOpen ? faAngleUp : faAngleDown}
+                                                        className={'mt-1 pr-2 block'}/> : <></>}
                         {title}
                     </span>
                 </legend>
@@ -39,7 +41,7 @@ export default function Field ({ key, className, legendClassName, children, titl
                     leaveFrom={'h-max'}
                     leaveTo={'opacity-0'}
         >
-            <div className={'mt-2'}>{children}</div>
+            <div className={clsx('mt-2', className)}>{children}</div>
         </Transition>
     </div>
 }

@@ -26,7 +26,7 @@ export default function Shops ({ className, title, shops = [] }) {
         </div>
 
         <div className={'flex items-center flex-wrap justify-center'}>
-            <AppLink href={route('shop.index')}
+            <AppLink href={route('shops.index')}
                      className={'mx-auto text-xs text-center px-5 rounded py-3 bg-neutral-800/20 dark:text-gray-300 text-neutral-300 dark:hover:text-white transition-all'}
                      icon={faShop}>View All</AppLink>
         </div>

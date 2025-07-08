@@ -6,7 +6,7 @@ use App\Helpers\Functions;
 use App\Http\Resources\Favorites\FavoriteResource;
 use App\Http\Resources\ListingItemCar\ListingItemCarResource;
 use App\Http\Resources\PredefinedLocation\PredefinedLocationResouce;
-use App\Http\Resources\Shops\ShopResource;
+use App\Http\Resources\Shop\ShopResource;
 use App\Http\Resources\User\UserObjectResource;
 use App\Models\ListingItem;
 use App\Models\ListingItemsCar;

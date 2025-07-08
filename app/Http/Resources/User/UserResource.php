@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources\User;
 
-use App\Http\Resources\Balance\UserBalanceResource;
-use App\Http\Resources\Shops\ShopResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

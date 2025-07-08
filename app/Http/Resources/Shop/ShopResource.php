@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Resources\Shops;
+namespace App\Http\Resources\Shop;
 
+use App\Http\Resources\Contacts\ContactResource;
 use App\Http\Resources\Favorites\FavoriteResource;
+use App\Http\Resources\User\UserObjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ShopBlockResource extends JsonResource
+class ShopResource extends JsonResource
 {
+
     public function toArray(Request $request)
     {
         $days = [
@@ -34,15 +37,24 @@ class ShopBlockResource extends JsonResource
         }
         unset($_closing_day);
 
+        $photos = $this->photos;
+
+
         return [
             ...parent::toArray($request),
-
-            'photos'        => $this->photos,
+            'h'             => $this->item_hash,
+            'user'          => new UserObjectResource($this->user),
+            'photos'        => $photos,
+            'contacts'      => ContactResource::collection($this->contacts),
+            'link'          => route('shop.single', $this->id),
+            'created_at'    => $this->created_at->format('D, d M Y'),
             //'opening_days_display' => $opening_days_display,
             //'closing_days_display' => $closing_days_display,
-            'cover_photo'   => $this->cover_photo,
-            'primary_photo' => $this->primary_photo ?? $this->photos->first(),
+            'location'      => $this->location,
+            'cover_photo'   => $photos->where('is_cover')->first(),
+            'primary_photo' => $photos->where('is_primary')->first(),
             'favorites'     => FavoriteResource::collection($this->favorites),
         ];
     }
+
 }

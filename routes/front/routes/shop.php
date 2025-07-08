@@ -3,11 +3,11 @@
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('shop')->group(function () {
+Route::prefix('shops')->group(function () {
     Route::post('usernameCheck', [ShopController::class, 'usernameCheck'])
         ->name('shop.username.check');
 
-    Route::get(null, [ShopController::class, 'index'])->name('shop.index');
+    Route::get(null, [ShopController::class, 'index'])->name('shops.index');
 
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('create', [ShopController::class, 'form'])->name('shop.create');

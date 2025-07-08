@@ -8,9 +8,9 @@ use App\Helpers\Functions;
 use App\Http\Resources\ListingItem\ListingItemBlocksResource;
 use App\Http\Resources\PredefinedLocation\PredefinedLocationResouce;
 use App\Http\Resources\Shop\ShopFormResource;
+use App\Http\Resources\Shop\ShopResource;
 use App\Http\Resources\Shop\StatsGroupResource;
 use App\Http\Resources\Shop\StatsResource;
-use App\Http\Resources\Shops\ShopResource;
 use App\Models\Photo;
 use App\Models\PredefinedLocation;
 use App\Models\Shop;
@@ -47,6 +47,12 @@ class ShopController extends Controller
     {
         return Inertia::render('Shops/Index', [
             'title' => 'Shop',
+            'types' => ShopType::select(['title', 'id'])
+                ->get()
+                ->setVisible([])
+                ->toArray(),
+            'predefined_locations' => PredefinedLocationResouce::collection(PredefinedLocation::where(['region' => config('site.regions.current')])
+                ->get()),
         ]);
     }
 

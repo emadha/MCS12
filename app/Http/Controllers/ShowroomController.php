@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Shops\ShopResource;
+use App\Http\Resources\Shop\ShopResource;
 use App\Models\Shop;
 use App\Models\ShopType;
 use App\Models\Showroom;

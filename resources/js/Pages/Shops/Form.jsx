@@ -2,33 +2,42 @@ import Field from '@/Components/Form/Field'
 import TextInput from '@/Components/Form/TextInput'
 import TextArea from '@/Components/Form/TextArea'
 import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAt, faCircleCheck, faExclamationCircle, faGlobe, faImage, faMobileAlt, faPhone, faPlus, faSave } from '@fortawesome/free-solid-svg-icons'
-import { useForm } from '@inertiajs/react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {
+    faAt,
+    faCircleCheck,
+    faExclamationCircle,
+    faGlobe,
+    faImage,
+    faMobileAlt,
+    faPhone,
+    faPlus,
+    faSave
+} from '@fortawesome/free-solid-svg-icons'
+import {useForm} from '@inertiajs/react'
 import InputError from '@/Components/Form/InputError'
-import React, { createRef, useContext, useEffect, useState } from 'react'
-import { AppContext } from '@/AppContext'
-import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
-import { parseInt } from 'lodash'
+import React, {createRef, useContext, useEffect, useState} from 'react'
+import {AppContext} from '@/AppContext'
+import {faCheckCircle, faCircle} from '@fortawesome/free-regular-svg-icons'
+import {parseInt} from 'lodash'
 import Alert from '@/Components/Alerts/Alert'
-import InputLabel from '@/Components/Form/InputLabel'
-import { Checkbox } from 'antd'
+import {Checkbox} from 'antd'
 import Hr from '@/Components/Hr'
 import PageContainer from '@/Layouts/PageContainer'
 import SecondaryButton from '@/Components/Form/Buttons/SecondaryButton'
-import { faFacebookF, faInstagram, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
+import {faFacebookF, faInstagram, faWhatsapp} from '@fortawesome/free-brands-svg-icons'
 import Contacts from '@/Components/Contacts'
 import GoogleMapComponent from '@/Components/GoogleMapComponent'
 import MainButton from '@/Components/Form/Buttons/MainButton'
 
 let usernameCheckTimeOut = null
-export default function Form ({
-    title, shop, types,
-    contactMethods = [], predefined_locations, csrf_token,
-}) {
+export default function Form({
+                                 title, shop, types,
+                                 contactMethods = [], predefined_locations, csrf_token,
+                             }) {
     const USERNAME_MAX_LENGTH = 30
 
-    const { lang } = useContext(AppContext)
+    const {lang} = useContext(AppContext)
 
     const [contacts, setContacts] = useState(shop.data.contacts ?? [])
 
@@ -37,7 +46,10 @@ export default function Form ({
 
     const [selectedLocation, setSelectedLocation] = useState(null)
 
-    const [shopTypes, setShopTypes] = useState(types)
+    const [shopTypes, setShopTypes] = useState(types.map(type => ({
+        ...type,
+        checked: shop.data.types.includes(type.id)
+    })))
 
     const {
         data, setData, post, processing, errors, reset,
@@ -47,11 +59,11 @@ export default function Form ({
         title: shop?.data.title ?? '',
         username: shop?.data.username ?? '',
         description: shop?.data.description ?? '',
-        types: types,
+        types: shopTypes,
         cover_photo: null,
         profile_photo: null,
         contacts: shop.data.contacts ?? [],
-        predefined_location: { id: shop?.data.predefined_location ?? '', name: '' },
+        predefined_location: {id: shop?.data.predefined_location ?? '', name: ''},
     })
 
     const [geoLocation, setGeoLocation] = useState({})
@@ -151,7 +163,7 @@ export default function Form ({
             }
 
             axios.post(route('shop.username.check'),
-                { username: data.username }).then(res => {
+                {username: data.username}).then(res => {
                 setUsernameStatus(true)
                 clearErrors('username')
             }).catch(err => {
@@ -200,11 +212,12 @@ export default function Form ({
         MOBILE: faMobileAlt,
     }
 
-    const ContactAddForm = ({ contactTypes, value }) => {
+    const ContactAddForm = ({contactTypes, value}) => {
         const [step, setStep] = useState(0)
     }
 
-    return <PageContainer title={title} subtitle={shop?.data?.id ? 'Shop ID #' + shop.data.id : 'New Shop'} mainClassName={'flex mx-auto'}>
+    return <PageContainer title={title} subtitle={shop?.data?.id ? 'Shop ID #' + shop.data.id : 'New Shop'}
+                          mainClassName={'flex mx-auto'}>
 
 
         {Object.values(errors).length ? Object.values(errors).length && <Alert type={'danger'}>
@@ -239,16 +252,20 @@ export default function Form ({
                                                  'group-hover:bottom-32  group-hover:opacity-100 opacity-20 text-white'}/>
                         </div>
 
-                        {shop?.data?.primary_photo?.square_sm || profilePicture ? <img className={'m-1 aspect-square rounded-full block w-64 p-2 absolute object-cover'}
-                                                                                       src={profilePicture ?? shop.data.primary_photo.square_sm}
-                                                                                       alt={''}/> : <></>}
+                        {shop?.data?.primary_photo?.square_sm || profilePicture ?
+                            <img className={'m-1 aspect-square rounded-full block w-64 p-2 absolute object-cover'}
+                                 src={profilePicture ?? shop.data.primary_photo.square_sm}
+                                 alt={''}/> : <></>}
                     </div>
                 </div>
             </Field>
 
             <div className={'flex flex-wrap'}>
                 <Field className={'w-full lg:w-1/2'} title={lang('Details')}>
-                    <Field className={'my-5'}>
+                    <Field title={lang('Shop Title')} className={'my-5'}>
+                        <InputError message={errors.title} className="mt-2"/>
+                        <p className={'text-xs mb-2'}>Choose a clear and descriptive title for your shop that customers
+                            will easily recognize and remember.</p>
                         <TextInput
                             disabled={processing}
                             id={'title'}
@@ -256,30 +273,35 @@ export default function Form ({
                             name={'title'}
                             placeholder={lang('Title')}
                             handleChange={onHandleChange}/>
-                        <InputError message={errors.title} className="mt-2"/>
                     </Field>
-                    <Field className={'my-5'}>
-                        <div>
-                            <TextInput
-                                disabled={processing || shop?.data?.username}
-                                icon={
-                                    !checkingUsername ?
-                                        (usernameStatus !== null && checkingUsername !== null && data.username && !shop?.data?.id
-                                            ? (usernameStatus ? faCircleCheck : faExclamationCircle)
-                                            : null)
-                                        : faCircle
-                                }
-                                prefixIconClassName={usernameStatus ? ' dark:text-green-500 ' : ' dark:text-red-500 '}
-                                isLoading={checkingUsername}
-                                id={'username'}
-                                value={data.username}
-                                name={'username'}
-                                maxLength={USERNAME_MAX_LENGTH}
-                                placeholder={lang('Username (only latin letters and underscore allowed)')}
-                                handleChange={handleOnUsernameChange}/>
-                            <InputError message={errors.username} className="mt-2"/></div>
+                    <Field title={lang('Username')} className={'my-5'}>
+                        <InputError message={errors.username} className="mt-2"/>
+                        <p className={'text-xs mb-2'}>Create a unique username for your shop URL. Use only letters,
+                            numbers and underscores. Once set, this cannot be changed.</p>
+                        <TextInput
+                            disabled={processing || shop?.data?.username}
+                            icon={
+                                !checkingUsername ?
+                                    (usernameStatus !== null && checkingUsername !== null && data.username && !shop?.data?.id
+                                        ? (usernameStatus ? faCircleCheck : faExclamationCircle)
+                                        : null)
+                                    : faCircle
+                            }
+                            prefixIconClassName={usernameStatus ? ' dark:text-green-500 ' : ' dark:text-red-500 '}
+                            isLoading={checkingUsername}
+                            id={'username'}
+                            value={data.username}
+                            name={'username'}
+                            maxLength={USERNAME_MAX_LENGTH}
+                            placeholder={lang('E.g. myshop_2025')}
+                            handleChange={handleOnUsernameChange}/>
                     </Field>
-                    <Field className={'my-5'}>
+                    <Field title={lang('Shop Description')} className={'my-5'}>
+                        <InputError message={errors.description} className="mt-2"/>
+                        <p className={'text-xs mb-2'}>Describe your shop in detail. Include information about your
+                            products,
+                            services, specialties, and anything that makes your shop unique. A good description helps
+                            customers understand what you offer.</p>
                         <TextArea
                             disabled={processing}
                             id={'description'}
@@ -289,13 +311,11 @@ export default function Form ({
                             placeholder={lang('Description')}
                             handleChange={onHandleChange}>
                         </TextArea>
-                        <InputError message={errors.description} className="mt-2"/>
                     </Field>
 
-                    <Field className={''}>
-                        <InputLabel>{lang('Predefined Location')}</InputLabel>
-                        <small>{lang('Your shop will be located in these main locations.')}</small>
-                        {errors.predefined_location ? <InputError message={errors.predefined_location}/> : <></>}
+                    <Field title={lang('Predefined Location')}>
+                        <InputError message={errors.predefined_location}/>
+                        <p className={'text-xs'}>{lang('Select a predefined location where your shop will be located. This helps customers find shops in specific areas. Choose the most relevant area that best represents your shop\'s physical location. You can later add a precise location on the map.')}</p>
                         <div className={'flex flex-wrap justify-start w-full mx-auto mt-10 rounded'}>
                             {Object.values(predefined_locations.data).map((predefined_location, k) =>
                                 <div className={'sm:w-1/2 w-full p-1 max-w-xs'}>
@@ -303,7 +323,7 @@ export default function Form ({
                                         key={predefined_location.id}
                                         className={'w-full border rounded text-neutral-500' +
                                             (data.predefined_location.id == predefined_location.id ? ' bg-violet-700 text-white ' : '')}
-                                        onClick={e => setData('predefined_location', predefined_location) || clearErrors('predefined_location')}
+                                        onClick={e => setData('predefined_location', predefined_location) | clearErrors('predefined_location')}
                                     >
                                         <FontAwesomeIcon icon={faCheckCircle}
                                                          className={'mx-2 ' + (data.predefined_location.id === predefined_location.id ? 'opacity-100 animate-pop-in-lg' : 'opacity-0')}/>
@@ -313,32 +333,31 @@ export default function Form ({
                             )}
                         </div>
 
-                        <InputError message={errors.location} className={'mt-2'}/>
                     </Field>
 
                     <Hr/>
 
-                    <Field className={'text-left rtl:text-right py-2'}>
-                        <InputLabel>{lang('Shop type')}</InputLabel>
+                    <Field title={lang('Shop type')} className={'text-left rtl:text-right py-2'}>
+                        <InputError message={errors.types} className={'mt-2'}/>
                         <small>{lang('Choose type(s) that suits your shop.')}</small>
                         <div className={'flex flex-wrap'}>
                             {Object.values(data.types).map(type =>
                                 <Checkbox disabled={processing}
                                           key={type.id}
                                           name={'type'}
+                                          checked={shopTypes.find(t => t.id === type.id)?.checked || false}
                                           value={type.id}
                                           onChange={e => {
-                                              setShopTypes(prevState => prevState.map(t => {
-                                                  if (t.id === e.target.value) {
-                                                      t.checked = e.target.checked
-                                                  }
-                                                  return t
-                                              }))
-
+                                              const updatedTypes = shopTypes.map(t => ({
+                                                  ...t,
+                                                  checked: t.id === parseInt(e.target.value) ? e.target.checked : t.checked
+                                              }));
+                                              setShopTypes(updatedTypes);
+                                              setData('types', updatedTypes);
                                           }}
-                                          checked={type.checked}
                                           className={'w-full mx-auto sm:w-1/2 md:w-1/3'}
-                                >{lang(type.title)}</Checkbox>)
+                                >{lang(type.title)}
+                                </Checkbox>)
                             }
                         </div>
                     </Field>
@@ -355,6 +374,8 @@ export default function Form ({
 
                     <Hr/>
                     <Field className={''} title={lang('Contact')}>
+                        <InputError message={errors.contacts} className="mt-2"/>
+
                         <i>{lang('Select type of contact')}</i>
                         <Contacts allowedContactMethods={contactMethods}
                                   rootSelectedContactMethods={data.contacts}
