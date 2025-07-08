@@ -50,7 +50,7 @@
     }
 
     .dark {
-        --background: 215 25% 6%;
+        --background: 205 25% 6%;
         --foreground: 210 20% 95%;
 
         --card: 215 25% 8%;
@@ -461,8 +461,8 @@ input[type=number] {
 
 .bg-grad-primary {
     @apply
-    bg-[radial-gradient(300.75%_100%_at_50%_0%,#fafafa_0%,#fff_48.73%)]
-    dark:bg-[radial-gradient(300.75%_100%_at_50%_0%,#151617_0%,#151617.73%)];
+    bg-[radial-gradient(300.75%_100%_at_50%_0%,#fafafa_0%,#fefeff_48.73%)]
+    dark:bg-[radial-gradient(300.75%_100%_at_50%_0%,#151923_0%,#151617_73%)];
 }
 
 .bg-grad-primary-inverse {

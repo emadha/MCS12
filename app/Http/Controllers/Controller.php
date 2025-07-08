@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ListingItem\Blocks\SimpleBlockResource;
+use App\Http\Resources\ListingItem\ListingItemBlocksResource;
 use App\Models\ListingItem;
 use App\Models\ListingItemsCar;
 use App\Models\Shop;
@@ -25,8 +26,13 @@ class Controller extends BaseController
 
     public function index(Request $request)
     {
+
         return Inertia::render('Index', [
-            'latest_items' => SimpleBlockResource::collection(ListingItem::limit(4)->latest()->get()),
+            'latest_items' => ListingItemBlocksResource::collection(ListingItem::limit(4)
+                ->typeCars()
+                ->with(['item'])
+                ->latest()->get()),
+
             'total' => [
                 'users' => User::count(),
                 'listed_cars' => ListingItemsCar::count(),
