@@ -14,13 +14,14 @@ import {AppContext} from '@/AppContext'
 import ReportForm from '@/Components/Forms/ReportForm'
 import {faFacebook, faInstagram, faTiktok, faWhatsapp} from '@fortawesome/free-brands-svg-icons'
 import {faCalendar, faEnvelope} from '@fortawesome/free-regular-svg-icons'
-import GoogleMapComponent from '@/Components/GoogleMapComponent'
 import Hr from '@/Components/Hr'
 import {Inertia} from '@inertiajs/inertia'
 import SkeletonListingBlockItem from '@/Components/SkeletonListingBlockItem'
 import {createTheme} from '@mui/material/styles'
 import {lime, red} from '@mui/material/colors'
 import ShopLayout from "@/Layouts/ShopLayout.jsx";
+import LeafletMapComponent from "@/Components/LeafletMapComponent.jsx";
+import ReviewComponent from "@/Components/Actions/Reviews/ReviewComponent.jsx";
 
 export default function Single({title, shop, unique_makes = [], unique_models = []}) {
     const urlParams = new URLSearchParams(window.location.search)
@@ -45,7 +46,7 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
     const fetchListing = (type = 'cars') => {
         setLoadingShopListings(true)
         axios.get(route('api.shop.listings', {
-            shop_id: loadedShop.id,
+            shop: loadedShop.id,
             t: 'cars',
             make: selectedShopListingMakes,
             model: selectedShopListingModels,
@@ -144,7 +145,7 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
             <p>Latitude: {location.lat}</p>
 
             <p>{location.address}</p>
-            <GoogleMapComponent/>
+            <LeafletMapComponent initialLocation={location}/>
         </div>
     const pluck = (arr, keys) => arr.map(i => Object.values(keys).map(k => i[k]))
     const theme = createTheme({
@@ -217,6 +218,10 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
                              title={lang('View Stats')}>
                             <FontAwesomeIcon icon={faUser} className={'text-xs dark:text-neutral-500'}/>
                             <Link href={route('shop.single.stats', loadedShop.id)}><small>View stats</small></Link>
+                        </div>
+
+                        <div>
+                            <ReviewComponent h={loadedShop.h}/>
                         </div>
 
                     </Field>

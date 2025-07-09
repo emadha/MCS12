@@ -27,7 +27,7 @@ import PageContainer from '@/Layouts/PageContainer'
 import SecondaryButton from '@/Components/Form/Buttons/SecondaryButton'
 import {faFacebookF, faInstagram, faWhatsapp} from '@fortawesome/free-brands-svg-icons'
 import Contacts from '@/Components/Contacts'
-import GoogleMapComponent from '@/Components/GoogleMapComponent'
+import LeafletMapComponent from '@/Components/LeafletMapComponent'
 import MainButton from '@/Components/Form/Buttons/MainButton'
 import {clsx} from "clsx";
 
@@ -363,10 +363,11 @@ export default function Form({
                 </div>
                 <div className={'w-full lg:w-1/2 lg:px-10 px-0'}>
                     <Field title={lang('Map')} className={'w-full'}>
-                        <GoogleMapComponent
+                        <LeafletMapComponent
                             handleOnClick={e => setSelectedLocation(e)}
                             setGeoLocation={setGeoLocation}
                             setGeoLocationMessage={setGeoLocationMessage}
+                            countryName="Lebanon"
                             setLoadingGeoLocation={setLoadingGeoLocation}/>
                     </Field>
                     <Hr/>

@@ -6,7 +6,7 @@ import {AppContext} from '@/AppContext'
 import NotAuthorized from '@/Components/Modals/NotAuthorized'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import InstallPWAButton from '@/Components/InstallPWAButton';
-
+import {motion} from 'framer-motion'
 import MessageDialog from '@/Components/Modals/MessageDialog'
 import {Inertia} from '@inertiajs/inertia'
 
@@ -376,10 +376,19 @@ export default function Wrapper({children}) {
                 <NavBar auth={auth} className={'' + (url === '/' ? '' : '')}/>
                 <div className={'mx-auto flex flex-wrap transition-all'}>
                     <div className={'mx-auto w-full'}>
-                        <div className={'min-h-[calc(100vh_-_240px)]'}>
+
+                        <div className={'min-h-[calc(100vh_-_240px)] mb-96 z-10 bg-background relative'}>
                             {children}
                         </div>
-                        <Footer/>
+
+                        <motion.div
+                            className={'fixed bottom-0 w-screen z-0 bg-background text-white'}
+                            initial={{opacity: 0, y: 100}}
+                            whileInView={
+                                {opacity: [0, 1], y: [100, 0]}
+                            }>
+                            <Footer/>
+                        </motion.div>
                     </div>
                 </div>
                 <InstallPWAButton/>

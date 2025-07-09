@@ -12,6 +12,7 @@ use App\Traits\HasLocation;
 use App\Traits\HasPermalink;
 use App\Traits\HasPhotos;
 use App\Traits\HasPromotion;
+use App\Traits\HasReviews;
 use App\Traits\HasStats;
 use App\Traits\HasUser;
 use App\Traits\HasUsername;
@@ -50,6 +51,7 @@ class Shop extends Base
         HasLocation,
         HasPermalink,
         HasPromotion,
+        HasReviews,
         SoftDeletes;
 
     /**
@@ -88,8 +90,8 @@ class Shop extends Base
     protected $appends = ['display', 'link'];
 
     /**
-     * @param  Builder  $query
-     * @param  array  $types
+     * @param Builder $query
+     * @param array $types
      *
      * @return void
      */
@@ -101,7 +103,7 @@ class Shop extends Base
     }
 
     /**
-     * @param  Builder  $query
+     * @param Builder $query
      *
      * @return void
      */
@@ -111,8 +113,8 @@ class Shop extends Base
     }
 
     /**
-     * @param  Builder  $query
-     * @param  bool  $is_active
+     * @param Builder $query
+     * @param bool $is_active
      *
      * @return void
      */
@@ -122,7 +124,7 @@ class Shop extends Base
     }
 
     /**
-     * @param  Builder  $query
+     * @param Builder $query
      *
      * @return void
      */

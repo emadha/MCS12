@@ -30,7 +30,65 @@ You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you
 If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
 ## Laravel Sponsors
+# Mecarshop Map Implementation
 
+## Map Components
+
+This project now uses OpenStreetMap with Leaflet as an alternative to Google Maps for displaying interactive maps throughout the application.
+
+### LeafletMapComponent
+
+The `LeafletMapComponent` provides a free and open-source alternative to Google Maps with similar functionality:
+
+- Automatic geolocation to center the map on the user's current position
+- Click-to-add marker functionality
+- Reverse geocoding to get address information for selected locations
+- Responsive design that works well on all screen sizes
+
+### Features
+
+- **Free and Open Source**: Uses OpenStreetMap data which is free and doesn't require API keys
+- **Performance**: Lightweight and fast loading compared to Google Maps
+- **Customizable**: Easily style the map with CSS
+- **Privacy-focused**: Doesn't track users like Google Maps
+
+### Usage
+
+```jsx
+<LeafletMapComponent
+  handleOnClick={locationData => handleLocationSelect(locationData)}
+  setGeoLocation={setGeoLocation}
+  setGeoLocationMessage={setGeoLocationMessage}
+  setLoadingGeoLocation={setLoadingGeoLocation}
+/>
+```
+
+## Installation
+
+The required dependencies are already included in `package.json`:
+
+- `leaflet`: The core Leaflet library
+- `react-leaflet`: React components for Leaflet
+
+To install dependencies:
+
+```bash
+npm install
+```
+
+## Development
+
+To start the development server:
+
+```bash
+npm run dev
+```
+
+## Building for Production
+
+```bash
+npm run build
+```
 We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
 ### Premium Partners

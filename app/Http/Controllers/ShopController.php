@@ -171,7 +171,7 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function listings_cars(Request $request, int $shop_id)
+    public function listings_cars(Request $request, Shop $shop_id)
     {
         $items_limit = 50;
 
@@ -284,50 +284,45 @@ class ShopController extends Controller
 
         $request->request->add(['region' => config('site.regions.current')]);
 
-        try {
-            $validationRules = [
-                'title' => [
-                    'required',
-                    'min:4',
-                    'max:20',
-                    'unique:shops,title,' . $shop?->id,
-                ],
-                'description' => 'required|min:2|max:2000',
-                'user_id' => 'required|exists:users,id',
-                'types' => 'required|exists:shop_types,id',
-                'region' => 'required|exists:predefined_locations,region',
-                'predefined_location' => 'required|exists:predefined_locations,id,id,'
-                    . $request->get('predefined_location')
-                    . ',region,'
-                    . $request->get('region'),
-                'contacts' => ['required', new ContactRule()],
-                'location' => 'required',
+        $validationRules = [
+            'title' => [
+                'required',
+                'min:4',
+                'max:20',
+                'unique:shops,title,' . $shop?->id,
+            ],
+            'description' => 'required|min:2|max:2000',
+            'user_id' => 'required|exists:users,id',
+            'types' => 'required|exists:shop_types,id',
+            'region' => 'required|exists:predefined_locations,region',
+            'predefined_location' => 'required|exists:predefined_locations,id,id,'
+                . $request->get('predefined_location')
+                . ',region,'
+                . $request->get('region'),
+            'contacts' => ['required', new ContactRule()],
+            'location' => 'required',
+        ];
+
+        if (!$shop->id) {
+            $validationRules['profile_photo'] = 'required|exists:photos,id';
+            $validationRules['username'] = [
+                'nullable', 'max:30',
+                'unique:usernames,username',
+                'regex:/^[A-Za-z0-9_.]+$/u',
             ];
-
-            if (!$shop->id) {
-                $validationRules['profile_photo'] = 'required|exists:photos,id';
-                $validationRules['username'] = [
-                    'nullable', 'max:30',
-                    'unique:usernames,username',
-                    'regex:/^[A-Za-z0-9_.]+$/u',
-                ];
-            } else {
-                $validationRules['username'] = [
-                    'nullable', 'max:30',
-                    'unique:usernames,username,' . $shop?->username?->id,
-                    'regex:/^[A-Za-z0-9_.]+$/u',
-                ];
-                $validationRules['profile_photo'] = 'nullable|exists:photos,id';
-            }
-
-            // Validation Messages
-            $this->validate($request, $validationRules, [
-                'contacts.required' => 'You need to specify at least one contact method.',
-            ]);
-        } catch (\ErrorException $exception) {
-            session()->flash('message', ['status' => -1, 'message' => 'Failed ' . $exception->getMessage()]);
-            return back();
+        } else {
+            $validationRules['username'] = [
+                'nullable', 'max:30',
+                'unique:usernames,username,' . $shop?->username?->id,
+                'regex:/^[A-Za-z0-9_.]+$/u',
+            ];
+            $validationRules['profile_photo'] = 'nullable|exists:photos,id';
         }
+
+        // Validation Messages
+        $this->validate($request, $validationRules, [
+            'contacts.required' => 'You need to specify at least one contact method.',
+        ]);
 
         if ($shop->id) {
             $request->request->remove('username');
@@ -385,17 +380,23 @@ class ShopController extends Controller
                     'value' => $contact['value'],
                 ]);
             });
-        // Set Geo Location
-        $storedShop->location()->delete();
 
-        $storedShop->location()->create([
-            'long' => $request->get('location')['geometry']['location']['lng'],
-            'lat' => $request->get('location')['geometry']['location']['lat'],
-            'address' => $request->get('location')['formatted_address'],
-            'address_object' => $request->get('location'),
-        ]);
+        # Set Geo Location
+        if ($request->has('location') &&
+            isset($request->get('location')['geometry']['location']['lng']) &&
+            isset($request->get('location')['geometry']['location']['lat']) &&
+            isset($request->get('location')['formatted_address'])) {
 
-        // Set profile photo
+            $storedShop->location()->delete();
+            $storedShop->location()->create([
+                'long' => $request->get('location')['geometry']['location']['lng'],
+                'lat' => $request->get('location')['geometry']['location']['lat'],
+                'address' => $request->get('location')['formatted_address'],
+                'address_object' => $request->get('location'),
+            ]);
+        }
+
+        # Profile Photo
         if ($Photo && $request->get('profile_photo')) {
             // Delete previous photo(s), mainly one
             $shop->photos()->delete();
@@ -521,6 +522,11 @@ class ShopController extends Controller
                 'message' => 'Could not disapprove this shop',
             ];
         }
+    }
+
+    public function action_review(Request $request, Shop $shop)
+    {
+        dd('o');
     }
 
     /**

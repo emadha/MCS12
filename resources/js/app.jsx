@@ -1,4 +1,6 @@
 import '../css/app.css';
+import '../css/leaflet.css';
+import 'leaflet/dist/leaflet.css';
 import './bootstrap';
 
 import {createInertiaApp} from '@inertiajs/react';

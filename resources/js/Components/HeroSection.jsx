@@ -19,15 +19,15 @@ function HeroSection({latestItems}) {
             <div className={'w-1/2 sticky top-32 h-full'}>
                 <div>
                     <motion.div
-                        initial={{opacity: 0, y: -80}}
-                        animate={{opacity: 1, y: 0}}
+                        initial={{opacity: 0, scale: 0}}
+                        animate={{opacity: 1, scale: 1}}
                         transition={{
-                            duration: .2,
-                            ease: "easeInOut",
-                            delay: 0.2,
-                            damping: 10,
-                            stiffness: 100,
-                            bounce: 10
+                            bounceDamping: 10,
+                            bounceStiffness: 100,
+                            bounce: 0.5,
+                            duration: 0.7,
+                            ease: "backOut",
+                            delay: 0.2
                         }}
                         className={'font-light'}>
                         Mecarshop is a new way to buy and sell your dream car.
