@@ -84,6 +84,7 @@ class Shop extends Base
     protected $casts
         = [
             'opening_days' => 'array',
+            'established_at' => 'date'
         ];
 
     /**

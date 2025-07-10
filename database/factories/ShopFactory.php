@@ -19,12 +19,13 @@ class ShopFactory extends Factory
     public function definition(): array
     {
         return [
-            'title'        => $this->faker->text(rand(5, 100)),
-            'is_active'    => true,
-            'user_id'      => 1,
+            'title' => $this->faker->text(rand(5, 100)),
+            'is_active' => true,
+            'user_id' => rand(1, 10),
             'is_published' => true,
             'is_approved' => true,
-            'description'  => $this->faker->paragraph(rand(2, 10)),
+            'established_at' => $this->faker->dateTimeBetween('1970-01-01', 'now'),
+            'description' => $this->faker->paragraph(rand(2, 10)),
             'opening_hour' => Carbon::create(hour: rand(8, 14))->format('H:i:s'),
             'closing_hour' => Carbon::create(hour: rand(13, 21))->format('H:i:s'),
             'opening_days' => [1, 2, 3, 4, 5, 6],

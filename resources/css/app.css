@@ -366,12 +366,6 @@
     @apply bg-primary/15 text-primary;
 }
 
-/* Focus styles */
-:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-    border-radius: var(--radius);
-}
 
 
 #gradient-canvas {
@@ -441,20 +435,29 @@ input, textarea {
     outline: none !important;
 }
 
-textarea {
-
-}
-
-input[type=number] {
-    -moz-appearance: textfield !important;
-}
-
 .ant-skeleton.ant-skeleton-active .ant-skeleton-title::after,
 .ant-skeleton.ant-skeleton-active .ant-skeleton-input,
 .ant-skeleton.ant-skeleton-active .ant-skeleton-paragraph > li::after {
     @apply dark:bg-neutral-800
 }
 
+/* Refined gradient text */
+.refined-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(120deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+    background-size: 200% 200%;
+    animation: refined-flow 8s ease-in-out infinite;
+}
+
+@keyframes refined-flow {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
 .pagination-link {
     @apply py-1  rounded bg-neutral-800 px-3.5 shadow
 }

@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->foreignId('predefined_location')->nullable()
                 ->constrained()
                 ->cascadeOnUpdate();
-
+            $table->string('region', 4)->nullable();
             $table->decimal('min_price', 10)->nullable();
             $table->decimal('max_price', 10)->nullable();
 
@@ -39,6 +39,8 @@ return new class extends Migration {
             $table->boolean('is_active')->default(true);
             $table->boolean('is_approved')->default(false);
 
+            $table->date('established_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
