@@ -70,19 +70,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Activity::observe(ActivityObserver::class);
-        Credit::observe(CreditObserver::class);
-        Favorite::observe(FavoriteObserver::class);
-        Interaction::observe(InteractionObserver::class);
-        MessageBoard::observe(MessageBoardObserver::class);
-        Message::observe(MessageObserver::class);
-        ListingItem::observe(ListingItemObserver::class);
-        ListingItemsCar::observe(ListingItemsCarObserver::class);
-        Photo::observe(PhotoObserver::class);
-        UserPhoto::observe(UserPhotoObserver::class);
-        Shop::observe(ShopObserver::class);
-        User::observe(UserObserver::class);
-        Settings::observe(SettingObserver::class);
+
     }
 
     /**

@@ -46,14 +46,14 @@ export default function MainButton({
 
 
         {iconPosition === 'start' ? processing
-            ? <span className={'animate-pop-in'}><FontAwesomeIcon icon={faSpinner} spin={true}/></span>
+            ? <span className={'animate-pop-in'}><FontAwesomeIcon icon={faSpinner} className={iconClassName} spin={true}/></span>
             : icon && <FontAwesomeIcon className={'animate-pop-in' + (iconClassName ? ' ' + iconClassName : '')}
                                        icon={icon}/> : <></>}
 
         <div className={'w-full overflow-ellipsis overflow-hidden'}>{children}</div>
 
         {iconPosition === 'end' ? processing
-            ? <span className={'animate-pop-in'}><FontAwesomeIcon icon={faSpinner} spin={true}/></span>
+            ? <span className={'animate-pop-in'}><FontAwesomeIcon icon={faSpinner} className={iconClassName} spin={true}/></span>
             : icon && <FontAwesomeIcon className={'animate-pop-in' + (iconClassName ? ' ' + iconClassName : '')}
                                        icon={icon}/> : <></>}
     </button>

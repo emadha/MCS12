@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\ShopController;
 use App\Traits\HasActivity;
 use App\Traits\HasAlbums;
+use App\Traits\HasBadges;
 use App\Traits\HasComments;
 use App\Traits\HasContact;
 use App\Traits\HasFavorites;
@@ -39,19 +40,20 @@ class Shop extends Base
 {
 
     use HasActivity,
-        HasFactory,
-        HasUser,
         HasAlbums,
-        HasLocation,
-        HasPhotos,
-        HasFavorites,
+        HasBadges,
         HasComments,
-        HasStats, HasContact,
-        HasUsername,
+        HasContact,
+        HasFactory,
+        HasFavorites,
         HasLocation,
         HasPermalink,
+        HasPhotos,
         HasPromotion,
         HasReviews,
+        HasStats,
+        HasUser,
+        HasUsername,
         SoftDeletes;
 
     /**

@@ -2,11 +2,34 @@
 
 namespace App\Providers;
 
+use App\Models\Activity;
+use App\Models\Credit;
+use App\Models\Favorite;
+use App\Models\Interaction;
 use App\Models\ListingItem;
+use App\Models\ListingItemsCar;
+use App\Models\Message;
 use App\Models\MessageBoard;
+use App\Models\Photo;
 use App\Models\Session;
+use App\Models\Settings;
 use App\Models\Shop;
 use App\Models\ShopType;
+use App\Models\User;
+use App\Models\UserPhoto;
+use App\Observers\ActivityObserver;
+use App\Observers\CreditObserver;
+use App\Observers\FavoriteObserver;
+use App\Observers\InteractionObserver;
+use App\Observers\ListingItemObserver;
+use App\Observers\ListingItemsCarObserver;
+use App\Observers\MessageBoardObserver;
+use App\Observers\MessageObserver;
+use App\Observers\PhotoObserver;
+use App\Observers\SettingObserver;
+use App\Observers\ShopObserver;
+use App\Observers\UserObserver;
+use App\Observers\UserPhotoObserver;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -36,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        self::defineObservers();
 
         $localeCookie = Cookie::get('locale');
 
@@ -88,6 +112,23 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->configureRateLimiting();
+    }
+
+    protected function defineObservers(): void
+    {
+        Activity::observe(ActivityObserver::class);
+        Credit::observe(CreditObserver::class);
+        Favorite::observe(FavoriteObserver::class);
+        Interaction::observe(InteractionObserver::class);
+        MessageBoard::observe(MessageBoardObserver::class);
+        Message::observe(MessageObserver::class);
+        ListingItem::observe(ListingItemObserver::class);
+        ListingItemsCar::observe(ListingItemsCarObserver::class);
+        Photo::observe(PhotoObserver::class);
+        UserPhoto::observe(UserPhotoObserver::class);
+        Shop::observe(ShopObserver::class);
+        User::observe(UserObserver::class);
+        Settings::observe(SettingObserver::class);
     }
 
     /**

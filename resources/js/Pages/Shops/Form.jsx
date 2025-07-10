@@ -149,7 +149,7 @@ export default function Form({
 
     useEffect(() => {
 
-        if (shop.data.id) {
+        if (shop.data.username) {
             return
         }
 
@@ -166,6 +166,7 @@ export default function Form({
             axios.post(route('shop.username.check'),
                 {username: data.username}).then(res => {
                 setUsernameStatus(true)
+
                 clearErrors('username')
             }).catch(err => {
                 setUsernameStatus(false)

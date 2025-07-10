@@ -42,18 +42,19 @@ class ShopResource extends JsonResource
 
         return [
             ...parent::toArray($request),
-            'h'             => $this->item_hash,
-            'user'          => new UserObjectResource($this->user),
-            'photos'        => $photos,
-            'contacts'      => ContactResource::collection($this->contacts),
-            'link'          => route('shop.single', $this->id),
-            'created_at'    => $this->created_at->format('D, d M Y'),
+            'h' => $this->item_hash,
+            'user' => new UserObjectResource($this->user),
+            'photos' => $photos,
+            'contacts' => ContactResource::collection($this->contacts),
+            'link' => route('shop.single', $this->id),
+            'created_at' => $this->created_at->format('D, d M Y'),
             //'opening_days_display' => $opening_days_display,
             //'closing_days_display' => $closing_days_display,
-            'location'      => $this->location,
-            'cover_photo'   => $photos->where('is_cover')->first(),
+            'location' => $this->location,
+            'cover_photo' => $photos->where('is_cover')->first(),
             'primary_photo' => $photos->where('is_primary')->first(),
-            'favorites'     => FavoriteResource::collection($this->favorites),
+            'favorites' => FavoriteResource::collection($this->favorites),
+            'badges' => $this->badges,
         ];
     }
 

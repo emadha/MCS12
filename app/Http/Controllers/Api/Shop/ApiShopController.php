@@ -14,12 +14,16 @@ class ApiShopController extends Controller
 
         $query = Shop::query();
 
-        if ($request->has('title')) {
-            $query->where('title', 'LIKE', '%' . $request->title . '%');
+        if ($request->get('title')) {
+            $query->where('title', 'LIKE', '%' . $request->get('title') . '%');
         }
 
-        if ($request->has('predefined_location')) {
-            $query->where('predefined_location', $request->predefined_location);
+        if ($request->get('predefined_location')) {
+            $query->where('predefined_location', $request->get('predefined_location'));
+        }
+
+        if ($request->get('type')) {
+            $query->type(explode(',', $request->get('type')));
         }
 
         return ShopBlockResource::collection($query->paginate(5));

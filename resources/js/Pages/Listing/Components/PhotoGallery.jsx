@@ -141,7 +141,7 @@ export default function PhotoGallery ({ className, photos }) {
                 className={'xl:w-8/12 w-full items-center rtl:mr-0 flex justify-center rounded-lg cursor-pointer relative group xl:mb-0'}
                 onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
 
-                <Transition show={!loadedPhotos[selected]?.published ?? false}
+                <Transition show={!loadedPhotos[selected]?.published}
                             enter={'duration-300'}
                             enterFrom={'opacity-0'}
                             enterTo={'opacity-100'}

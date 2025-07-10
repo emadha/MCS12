@@ -16,10 +16,7 @@ export default function ContextMenu ({
     const openContextMenu = (open, e, close) => {
         e.stopPropagation()
         // Used to not call axios if you're clicking to close the menu
-        if (open) {
-            e.preventDefault()
-            return false
-        }
+
         // Set context menu text whilst loading
         setContextMenu([
             {

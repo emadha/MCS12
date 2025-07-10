@@ -1,11 +1,11 @@
 import React from 'react';
 import {LoaderIcon} from "react-hot-toast";
 
-function Loading(props) {
+function Loading({loadingText = 'Loading... '}) {
     return <div className={'text-xs select-none py-10 rounded bg-white/5'}>
         <div className={'animate-pulse flex items-center gap-x-2 justify-center'}>
             <LoaderIcon/>
-            <span>Loading map...</span>
+            <span>{loadingText}</span>
         </div>
     </div>
 }

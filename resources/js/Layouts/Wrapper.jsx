@@ -377,15 +377,15 @@ export default function Wrapper({children}) {
                 <div className={'mx-auto flex flex-wrap transition-all'}>
                     <div className={'mx-auto w-full'}>
 
-                        <div className={'min-h-[calc(100vh_-_240px)] mb-96 z-10 bg-background relative'}>
+                        <div className={'min-h-[calc(100vh_-_240px)] mb-72 z-10 pb-20 bg-background relative'}>
                             {children}
                         </div>
 
                         <motion.div
-                            className={'fixed bottom-0 w-screen z-0 bg-background text-white'}
-                            initial={{opacity: 0, y: 100}}
+                            className={'fixed bottom-0 w-screen z-0 bg-black py-20 text-white'}
+                            initial={{opacity: 0, y: -100}}
                             whileInView={
-                                {opacity: [0, 1], y: [100, 0]}
+                                {opacity: [0, 1], y: [10, 0]}
                             }>
                             <Footer/>
                         </motion.div>

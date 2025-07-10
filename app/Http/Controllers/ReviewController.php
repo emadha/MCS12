@@ -4,13 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ItemHashException;
 use App\Helpers\Functions;
+use App\Http\Resources\Reviews\SimpleReviewsResource;
 use App\Models\Review;
 use App\Rules\ItemHashValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
 {
+
+    /**
+     * @throws ValidationException
+     * @throws ItemHashException
+     */
+    public function index(Request $request)
+    {
+        $this->validate($request, [
+            'h' => new ItemHashValidation(),
+        ]);
+        $Item = Functions::decryptItemHash($request->get('h'));
+
+        return [
+            'reviews' => SimpleReviewsResource::collection($Item->reviews),
+            'average_rating' => $Item->average_rating,
+        ];
+    }
+
     /**
      * Store a newly created review in storage.
      *

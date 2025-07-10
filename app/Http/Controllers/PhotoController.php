@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PhotoResource;
 use App\Models\Photo;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Exceptions\DecoderException;
@@ -23,9 +25,9 @@ class PhotoController extends Controller
 {
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|\Illuminate\Foundation\Application|Response
      */
     public function upload(Request $request): \Illuminate\Foundation\Application|Response|Application|ResponseFactory
     {
@@ -65,7 +67,7 @@ class PhotoController extends Controller
                     'message' => 'Error uploading photo',
                 ], ResponseSymphony::HTTP_BAD_REQUEST);
             }
-        } catch (\Exception|DecoderException) {
+        } catch (Exception|DecoderException) {
             return response([
                 'status'  => -1,
                 'message' => 'Error #'.__LINE__,
@@ -74,10 +76,10 @@ class PhotoController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Photo  $photo
+     * @param Request $request
+     * @param Photo $photo
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|\Illuminate\Foundation\Application|Response
      */
     public function action_delete(
         Request $request,
@@ -111,10 +113,10 @@ class PhotoController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Photo  $photo
+     * @param Request $request
+     * @param Photo $photo
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|\Illuminate\Foundation\Application|Response
      */
     public function action_make_primary(Request $request, Photo $photo)
     {
@@ -137,10 +139,10 @@ class PhotoController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Photo  $photo
+     * @param Request $request
+     * @param Photo $photo
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|\Illuminate\Foundation\Application|Response
      */
     public function action_publish(Request $request, Photo $photo): \Illuminate\Foundation\Application|Response|Application|ResponseFactory
     {
@@ -172,10 +174,10 @@ class PhotoController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Photo  $photo
+     * @param Request $request
+     * @param Photo $photo
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|\Illuminate\Foundation\Application|Response
      */
     public function action_unpublish(Request $request, Photo $photo): \Illuminate\Foundation\Application|Response|Application|ResponseFactory
     {
@@ -207,10 +209,10 @@ class PhotoController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Photo  $photo
+     * @param Request $request
+     * @param Photo $photo
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function contextMenu(Request $request, Photo $photo)
     {

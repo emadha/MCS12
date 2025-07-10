@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             // RolesAndPermissionSeeder::class, already calling in migration
+            BadgeSeeder::class,
         ]);
 
         // Create Super Admin

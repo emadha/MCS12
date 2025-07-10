@@ -76,15 +76,6 @@ class ShopController extends Controller
             'ShopController'
         );
 
-        for ($i = 0; $i < 10000; $i++) {
-            $int = mt_rand(1712004305, 1713604305);
-            try {
-                for ($k = 0; $k < mt_rand(1, 2000); $k++) {
-                }
-            } catch (Exception $exception) {
-            }
-        }
-
         $shopListedCars = $shop_frontend_page
             ->listingItems()
             ->typeCars()
@@ -344,12 +335,15 @@ class ShopController extends Controller
 
             // Move the photos from temp to live
             $tempFile = 'temp_photos/orphans/' . $Photo->filename;
-            $destinationFile = 'public/photos/shops/' . $Photo->filename;
-
-            if (Storage::exists($tempFile)) {
-                Storage::move($tempFile, $destinationFile);
+            if (Storage::disk('shops')->putFileAs(
+                $shop->id, Storage::path($tempFile), $Photo->filename)
+            ) {
+                Storage::disk('orphans')->delete($Photo->filename);
             }
+
         }
+
+        $request->request->add(['region' => config('site.regions.current')]);
 
         /** @var Shop $storedShop */
         $storedShop = $shop->updateOrCreate(['id' => $shop->id],
@@ -366,9 +360,9 @@ class ShopController extends Controller
 
         $storedShop->types()->sync($request->get('types'));
 
-        // Add Contacts
+        # Delete previous contacts
         $storedShop->contacts()->delete();
-
+        # Create new contacts
         collect($request->get('contacts'))
             ->filter(fn($contact) => $contact['value'])
             ->each(function ($contact) use ($storedShop) {

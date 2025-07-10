@@ -1,10 +1,10 @@
 import { Link } from '@inertiajs/react'
-import ShopBlock from '@/Pages/Shops/Components/ShopBlock'
 import AppLink from '@/Components/AppLink'
 import { faShop } from '@fortawesome/free-solid-svg-icons'
 import PageContainer from '@/Layouts/PageContainer'
 import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton'
 import Hr from '@/Components/Hr'
+import ShopBlock from "@/Components/Shops/ShopBlock.jsx";
 
 export default function Shops ({ className, title, shops = [] }) {
 

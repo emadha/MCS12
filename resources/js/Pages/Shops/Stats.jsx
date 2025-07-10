@@ -15,9 +15,9 @@ export default function Stats ({ title, shop = null, stats = [] }) {
         setTotalNonLoggedInViews(0)
         setTotalViews(0)
         stats.data?.length && stats.data.map((f, i) => {
-            setTotalLoggedInViews(prevState => parseInt(prevState) + parseInt(f.views_auth) ?? 0)
-            setTotalNonLoggedInViews(prevState => parseInt(prevState) + parseInt(f.views_not_auth) ?? 0)
-            setTotalViews(prevState => parseInt(prevState) + parseInt(f.views_total) ?? 0)
+            setTotalLoggedInViews(prevState => parseInt(prevState) + parseInt(f.views_auth))
+            setTotalNonLoggedInViews(prevState => parseInt(prevState) + parseInt(f.views_not_auth))
+            setTotalViews(prevState => parseInt(prevState) + parseInt(f.views_total))
         })
     }, [])
 

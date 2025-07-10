@@ -2,10 +2,16 @@ import ShopBadges from '@/Pages/Shops/Components/ShopBadges'
 import ListingItemCarBlock from '@/Components/Listing/ListingItemCarBlock'
 import Field from '@/Components/Form/Field'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCircleQuestion, faGlobe, faPhone, faShop, faUser} from '@fortawesome/free-solid-svg-icons'
+import {
+    faCircleQuestion,
+    faExclamationTriangle,
+    faGlobe,
+    faPhone,
+    faShop,
+    faUser
+} from '@fortawesome/free-solid-svg-icons'
 import LikeButton from '@/Components/Actions/LikeButton'
 import Alert from '@/Components/Alerts/Alert'
-import PageContainer from '@/Layouts/PageContainer'
 import {Link, router, usePage} from '@inertiajs/react'
 import ContextMenu from '@/Components/ContextMenu'
 import ConfirmForm from '@/Components/Forms/ConfirmForm'
@@ -58,6 +64,16 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
             },
         ).finally(() => setLoadingShopListings(false))
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 100)
+    }, []);
+
     useEffect(() => {
         fetchListing()
 
@@ -155,36 +171,35 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
         },
     })
     return <ShopLayout shop={shop}>
-        {shop ? <div className={'container p-10'}>
-            <div className={'relative mt-20'}>
+        {shop ? <>
+            <div className={'relative'}>
                 {!loadedShop?.is_approved &&
                     <Alert className={'my-5'} type={'danger'}>
                         <p>Shop is currently under review and is not active.</p>
                         <small>Inactive shop will not be displayed to the public, you are the only one who can see this
                             page.</small>
                     </Alert>}
-                <div className={'w-full h-full relative'}>
-                    <div className={'w-full h-full absolute'}>
-                        <img src={'https://picsum.photos/1200'} className={'rounded-xl w-full h-full object-cover'}/>
+                <div className={'w-full relative'}>
+                    <div className={'absolute w-full h-full aspect-video'}>
+                        <img src={'https://picsum.photos/1200'} className={'w-full h-full object-cover'}/>
                     </div>
-                    <div className={'flex items-start sticky top-32 duration-1000 bottom-0 h-full w-full'}>
+                    <div className={'flex items-stretch relative'}>
 
-                        <div
-                            className={'w-1/4 rounded-xl sticky mt-6 top-24 flex items-center justify-center text-neutral-600 indent-3 ' +
-                                'text-xs drop-shadow aspect-square'}>
+                        <div className={'w-1/4 flex items-center justify-center drop-shadow aspect-square'}>
                             {loadedShop && loadedShop?.photos[0]?.path?.square_sm
                                 ? <img
-                                    className={'w-1/2 rounded-xl'}
+                                    className={'outline outline-transparent hover:drop-shadow-xl transition-all cursor-pointer hover:outline-white outline-offset-4 ring-offset-transparent w-1/2 rounded-xl'}
                                     src={loadedShop?.photos[0]?.path?.square_sm}
                                     alt="Primary Photo"/>
                                 : <FontAwesomeIcon icon={faShop} className={'text-8xl opacity-70'}/>
                             }
                         </div>
 
-                        <div className={'w-3/4 p-5 pb-0 rounded sticky top-20'}>
-                            <div className={'flex items-center gap-x-5'}>
+                        <div className={'w-3/4 p-5 rounded'}>
+                            <div className={'flex h-full font-thin items-center gap-x-5'}>
                                 <div>
-                                    <h1 className={'drop-shadow-lg italic'}>{loadedShop.title}</h1>
+                                    <h1 className={'text-3xl drop-shadow-lg'}>{loadedShop.title}</h1>
+                                    <p>{loadedShop.description}</p>
                                 </div>
                             </div>
                         </div>
@@ -198,8 +213,7 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
             <div className={'flex flex-wrap items-start justify-center mt-10'}>
 
                 <div className={'w-full lg:w-1/4 flex flex-wrap @container'}>
-
-                    <Field title={lang('Details')} className={'w-full rounded-lg p-2 bg-white/5'}>
+                    <Field title={lang('Details')} collapsable={true} className={'w-full rounded-lg p-2 bg-white/5'}>
 
                         <div className={'flex space-x-2 items-center p-2'} title={lang('Created at')}>
                             <FontAwesomeIcon icon={faCalendar} className={'text-xs dark:text-neutral-500'}
@@ -220,17 +234,19 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
                             <Link href={route('shop.single.stats', loadedShop.id)}><small>View stats</small></Link>
                         </div>
 
-                        <div>
+                        <div className={'my-10'}>
                             <ReviewComponent h={loadedShop.h}/>
                         </div>
 
                     </Field>
-
-                    <Field title={lang('Description')} className={'w-full rounded-lg p-2 bg-white/5'}>
+                    <Field title={lang('Description')} collapsable={true}
+                           className={'w-full rounded-lg p-2 bg-white/5'}>
                         <p className={'text-sm text-left'}>{loadedShop.description}</p>
                     </Field>
 
-                    <LikeButton _r={'loadedShop.single.favorite'} item={loadedShop}/>
+                    <div className={'flex items-center justify-center w-full py-10'}>
+                        <LikeButton _r={'loadedShop.single.favorite'} item={loadedShop} iconClassName={'text-3xl'}/>
+                    </div>
 
                     <Field title={lang('Shop type')} className={'w-full rounded-lg p-2 bg-white/5'}>
                         <ShopBadges className={'flex flex-wrap'} shop={loadedShop}/>
@@ -240,9 +256,7 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
                     <Field title={lang('Contact')} className={'w-full p-2 bg-white/5 rounded-lg'}>
                         <ContactsBlock contacts={loadedShop.contacts}/>
                     </Field>
-
                     <Hr className={'hidden lg:block'}/>
-
                 </div>
 
                 <Field className={'w-3/4'}>
@@ -322,8 +336,10 @@ export default function Single({title, shop, unique_makes = [], unique_models = 
                 </Field>
             </div>
 
-        </div> : <>
-            <PageContainer className={'text-center'}>Invalid Page</PageContainer>
+        </> : <>
+            <div className={'flex items-center gap-x-2 justify-center select-none text-center'}>
+                <FontAwesomeIcon icon={faExclamationTriangle}/>
+            </div>
         </>}
     </ShopLayout>
 }

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {useForm} from '@inertiajs/react';
 import StarRating from './StarRating';
-import {motion} from 'framer-motion';
 import {InputLabel} from "@mui/material";
 import InputError from "@/Components/InputError.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
@@ -34,15 +33,8 @@ export default function ReviewForm({h, onSuccess}) {
     };
 
     return (
-        <motion.div
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            transition={{duration: 0.3}}
-            className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm"
-        >
+        <div>
             <form onSubmit={handleSubmit}>
-                <h3 className="text-lg font-medium mb-4">Write a Review</h3>
-
                 <div className="mb-4">
                     <InputLabel htmlFor="rating" value="Rating"/>
                     <div className="mt-1">
@@ -86,6 +78,6 @@ export default function ReviewForm({h, onSuccess}) {
                     </PrimaryButton>
                 </div>
             </form>
-        </motion.div>
+        </div>
     );
 };

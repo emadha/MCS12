@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ActionsController;
 use App\Http\Controllers\Api\ApiListingController;
 use App\Http\Controllers\ContextMenuController;
 use App\Http\Controllers\ListingItemsCarController;
@@ -36,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::get('/reviews', [ReviewController::class, 'index'])->name('api.reviews.index');
+Route::get('reviews', [ReviewController::class, 'index'])->name('api.reviews.index');
 Route::post('searchDefaults', [SearchController::class, 'defaultCriteria'])->name('api.search.defaults');
 Route::post('changeLocale', [\App\Http\Controllers\Api\ApiController::class, 'changeLocale'])->name('locale.change');
 

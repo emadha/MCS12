@@ -4,10 +4,10 @@ import {AppContext} from "@/AppContext";
 import MainButton from "@/Components/Form/Buttons/MainButton";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import Hr from "@/Components/Hr.jsx";
-import ShopBlock from "@/Pages/Shops/Components/ShopBlock.jsx";
 import Checkbox from "@/Components/Form/Checkbox.jsx";
 import Select from "@/Components/Form/Select.jsx";
 import TextInput from "@/Components/Form/TextInput.jsx";
+import ShopBlock from "@/Components/Shops/ShopBlock.jsx";
 
 export default function Index({types, predefined_locations = []}) {
     const [shops, setShops] = useState([]);
@@ -31,6 +31,15 @@ export default function Index({types, predefined_locations = []}) {
     useEffect(() => {
         fetchShops();
     }, [filters]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 100)
+    }, []);
 
     const fetchShops = async () => {
         setLoading(true);
@@ -93,9 +102,13 @@ export default function Index({types, predefined_locations = []}) {
                                 className={'w-min'}
                                 label={type.title}
                                 checked={filters.type === type.id.toString()}
-                                onChange={(e) => setFilters({
+                                handleChange={(e) => setFilters({
                                     ...filters,
-                                    type: e.target.checked ? type.id.toString() : ''
+                                    type: e.target.checked
+                                        ? filters.type
+                                            ? filters.type + ',' + type.id.toString()
+                                            : type.id.toString()
+                                        : filters.type.split(',').filter(t => t !== type.id.toString()).join(',')
                                 })}
                             /></div>
 

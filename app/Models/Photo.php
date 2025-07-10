@@ -41,8 +41,8 @@ class Photo extends Base
      *
      */
     public const TYPES = [
-        null               => 'orphans',
-        Shop::class        => 'shops',
+        null => 'orphans',
+        Shop::class => 'shops',
         ListingItem::class => 'l',
     ];
 
@@ -50,19 +50,19 @@ class Photo extends Base
      *
      */
     public const STORAGE_FILESYSTEM = [
-        null               => 'orphans',
-        Shop::class        => 'shops',
+        null => 'orphans',
+        Shop::class => 'shops',
         ListingItem::class => 'listings',
-        UserPhoto::class   => 'users',
+        UserPhoto::class => 'users',
     ];
 
     /**
      * [filename] => [width, height]
      */
     const SIZES = [
-        'wide_hi'   => [1500, 850, 100],
-        'wide_md'   => [500, 300, 90],
-        'tall_sm'   => [122, 200, 100],
+        'wide_hi' => [1500, 850, 100],
+        'wide_md' => [500, 300, 90],
+        'tall_sm' => [122, 200, 100],
         'square_sm' => [127, null, 60],
         'square_md' => [250, null, 80],
     ];
@@ -82,7 +82,7 @@ class Photo extends Base
      * # todo clean
      */
     /**
-     * @param  array  $IDS
+     * @param array $IDS
      *
      * @return void
      */
@@ -90,9 +90,9 @@ class Photo extends Base
     {
         $photoID = array_rand($IDS, 1);
 
-        $name = $photoID.'.png';
+        $name = $photoID . '.png';
 
-        if (Storage::drive('listings')->copy('picsum/'.$name, $name)) {
+        if (Storage::drive('listings')->copy('picsum/' . $name, $name)) {
             // dump('Stored image: ' . $name);
             $this->filename = $name;
             $this->save();
@@ -111,7 +111,7 @@ class Photo extends Base
         }
 
         Photo::where([
-            'item_id'   => $this->item_id,
+            'item_id' => $this->item_id,
             'item_type' => $this->item_type,
         ])
             ->update(['is_primary' => null]);
@@ -172,7 +172,7 @@ class Photo extends Base
     {
         return ImageManager::gd()->read(
             Storage::drive('photos')
-                ->get(self::TYPES[$this->item_type].DIRECTORY_SEPARATOR.$this->filename)
+                ->get(self::TYPES[$this->item_type] . DIRECTORY_SEPARATOR . $this->item->id . DIRECTORY_SEPARATOR . $this->filename)
         );
     }
 
@@ -189,14 +189,13 @@ class Photo extends Base
             throw new Exception('Type not found Exception');
         }
 
-        $pathByType = self::TYPES[$this->item_type];
-        $photosStorage = Storage::disk('photos')
-            ->path($pathByType.DIRECTORY_SEPARATOR);
+        $pathByType = self::TYPES[$this->item_type] . DIRECTORY_SEPARATOR . $this->item->id;
+        $photosStorage = Storage::disk('photos')->path($pathByType . DIRECTORY_SEPARATOR);
 
         // Full image path
-        $thumbsObject->full = secure_asset('assets/photos/'.$pathByType.'/'.$this->filename);
-        $pathInfo = pathinfo($photosStorage.DIRECTORY_SEPARATOR.$this->filename);
-        if (!file_exists($photosStorage.DIRECTORY_SEPARATOR.$this->filename)) {
+        $thumbsObject->full = secure_asset('assets/photos/' . $pathByType . '/' . $this->filename);
+        $pathInfo = pathinfo($photosStorage . DIRECTORY_SEPARATOR . $this->filename);
+        if (!file_exists($photosStorage . DIRECTORY_SEPARATOR . $this->filename)) {
             return $thumbsObject;
         }
         $filename = $pathInfo['filename'];
@@ -206,8 +205,8 @@ class Photo extends Base
         foreach (self::SIZES as $_key => $_size) {
             [$width, $height, $quality] = $_size;
 
-            $sizeFilename = $filename.'_'.$_key.'.'.$extension;
-            $sizeFullPathFilename = $dirname.DIRECTORY_SEPARATOR.$sizeFilename;
+            $sizeFilename = $filename . '_' . $_key . '.' . $extension;
+            $sizeFullPathFilename = $dirname . DIRECTORY_SEPARATOR . $sizeFilename;
 
             // Check if resized photo already exists
             if (!file_exists($sizeFullPathFilename)) {
@@ -219,11 +218,11 @@ class Photo extends Base
                         ->toWebp($quality)
                         ->save($sizeFullPathFilename);
                 } catch (\Exception $notReadableException) {
-                    Log::warning('Photo file not readable #'.__LINE__);
+                    Log::warning('Photo file not readable #' . __LINE__);
                 }
             }
 
-            $thumbsObject->$_key = secure_asset('assets/photos/'.$pathByType.'/'.$sizeFilename);
+            $thumbsObject->$_key = secure_asset('assets/photos/' . $pathByType . '/' . $sizeFilename);
         }
 
         return $thumbsObject;

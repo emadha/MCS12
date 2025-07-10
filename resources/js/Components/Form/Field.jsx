@@ -4,7 +4,15 @@ import {useState} from 'react'
 import {Transition} from '@headlessui/react'
 import {clsx} from "clsx";
 
-export default function Field({key, className, legendClassName, children, title, collapsable = false}) {
+export default function Field({
+                                  key,
+                                  className,
+                                  childrenClassName,
+                                  legendClassName,
+                                  children,
+                                  title,
+                                  collapsable = false
+                              }) {
     const [isOpen, setIsOpen] = useState(true)
     const collapse = () => {
         if (!collapsable) {
@@ -14,14 +22,14 @@ export default function Field({key, className, legendClassName, children, title,
         setIsOpen(!isOpen)
     }
 
-    return <div className={clsx('my-2 ', className)}>
+    return <div className={clsx('p-5 my-2 ', className)}>
 
         {title ?
             <fieldset className={'relative '}>
                 <legend className={
                     clsx('w-full uppercase text-xs font-light select-none',
                         legendClassName,
-                        collapsable ? 'hover:bg-green-500/10 transition-all rounded cursor-pointer' : '',
+                        collapsable ? 'hover:font-bold cursor-pointer' : '',
                         isOpen ? 'font-bold' : '')
                 } onClick={collapse}>
                     <span className={'flex items-center'}>
@@ -42,7 +50,7 @@ export default function Field({key, className, legendClassName, children, title,
                     leaveFrom={'h-max'}
                     leaveTo={'opacity-0'}
         >
-            <div className={clsx('mt-2', className)}>{children}</div>
+            <div className={clsx('mt-2', childrenClassName)}>{children}</div>
         </Transition>
     </div>
 }
