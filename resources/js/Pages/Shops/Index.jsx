@@ -13,6 +13,7 @@ import FlipWords from '@/Components/UI/flipwords.jsx';
 import {Checkbox} from 'antd';
 import Field from '@/Components/Form/Field.jsx';
 import {ShopTypeIcons} from '@/Components/Icons/ShopTypes/index.js';
+import useSwipe from '@/Components/hooks/useSwipe';
 
 export default function Index({types, predefined_locations = []}) {
     const [shops, setShops] = useState([]);
@@ -35,6 +36,21 @@ export default function Index({types, predefined_locations = []}) {
         rating_max: 5,
     });
     const {api} = useContext(AppContext);
+
+    // Setup swipe handler for pagination
+    const { touchRef: swipeRef } = useSwipe({
+        onSwipeLeft: () => {
+            if (pagination.current_page < pagination.last_page) {
+                goToNextPage();
+            }
+        },
+        onSwipeRight: () => {
+            if (pagination.current_page > 1) {
+                goToPreviousPage();
+            }
+        },
+        threshold: 80,
+    });
 
     useEffect(() => {
         fetchShops();
@@ -73,6 +89,24 @@ export default function Index({types, predefined_locations = []}) {
             setShops([]);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const goToNextPage = () => {
+        if (pagination.current_page < pagination.last_page) {
+            setFilters(prev => ({
+                ...prev,
+                page: pagination.current_page + 1
+            }));
+        }
+    };
+
+    const goToPreviousPage = () => {
+        if (pagination.current_page > 1) {
+            setFilters(prev => ({
+                ...prev,
+                page: pagination.current_page - 1
+            }));
         }
     };
 
@@ -244,6 +278,7 @@ export default function Index({types, predefined_locations = []}) {
                         ) : shops.length > 0 ? (
                             <>
                                 <div
+                                    ref={swipeRef}
                                     className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 py-20">
                                     {shops.map(
                                         (shop) => <ShopBlock
@@ -252,6 +287,20 @@ export default function Index({types, predefined_locations = []}) {
                                 </div>
 
                                 <Hr className={'my-20'}/>
+                                <div className="text-center mb-6">
+                                    <div className="text-sm text-gray-500 mb-2">
+                                        <span>Swipe left or right to navigate between pages</span>
+                                    </div>
+                                    <div className="flex items-center justify-center gap-2">
+                                        {pagination.current_page > 1 && (
+                                            <div className="text-primary text-sm">← Previous page</div>
+                                        )}
+                                        <span className="text-gray-400 mx-2">Page {pagination.current_page} of {pagination.last_page}</span>
+                                        {pagination.current_page < pagination.last_page && (
+                                            <div className="text-primary text-sm">Next page →</div>
+                                        )}
+                                    </div>
+                                </div>
                                 <div
                                     className="flex items-center justify-center gap-2 mt-6">
                                     {pagination.links.map((link, index) => (

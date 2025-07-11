@@ -50,6 +50,6 @@ class ApiShopController extends Controller
             $query->ratingRange($min, $max);
         }
 
-        return ShopBlockResource::collection($query->paginate(12));
+        return ShopBlockResource::collection($query->paginate(3));
     }
 }

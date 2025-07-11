@@ -364,7 +364,6 @@ export default function Form({
                                     </Checkbox>
                                 );
                             })}
-                            }
                         </div>
                     </Field>
                     <Hr/>
