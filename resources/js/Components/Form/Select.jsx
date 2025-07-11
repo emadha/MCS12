@@ -54,7 +54,7 @@ export default function Select({
             <div
                 className={'relative text-left group'}>
                 <ComboboxInput
-                    className={'i select-none text-black dark:text-white cursor-default '
+                    className={'fi select-none text-black dark:text-white cursor-default '
                         + (hasError ? ' ring-orange-600 dark:ring-orange-600 ' : '')
                         + (leftIcon || (clearable && selected !== null) ? ' !px-10 ' : '')}
                     displayValue={v => {

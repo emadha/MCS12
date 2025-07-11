@@ -87,7 +87,7 @@ export default function TextInput(
         {isLoading && <FontAwesomeIcon icon={faSpinner} spin={true} className={'right-3 top-4 absolute'}/>}
         <input autoComplete={autoComplete}
                className={
-                   'i '
+                   'fi '
                    + (icon ? (rtl ? '!pr-10' : '!pl-10 ') : '')
                    + (inputClassName ? ' ' + inputClassName : '') + ' '
                    + (hasError ? ' ring-orange-600 dark:ring-orange-600' : '')

@@ -30,15 +30,15 @@ export default function NavBar({className}) {
 
     const [brandClassName, setBrandClassName] = useState(
         'text-md md:text-lg lg:text-xl ');
-    const [navbarYPadding, setNavbarYPadding] = useState('py-1 ');
+    const [navbarYPadding, setNavbarYPadding] = useState('py-5 ');
 
     const _scroll = () => {
         if (document.scrollingElement.scrollTop < 10) {
-            setNavbarYPadding('py-2');
-            setBrandClassName(e => 'text-4xl md:text-3xl lg:text-4xl ');
+            setNavbarYPadding('py-5');
+            setBrandClassName(e => '');
         } else /* if (document.scrollingElement.scrollTop > 100) */ {
-            setNavbarYPadding('py-2 bg-grad-primary backdrop-filter-none');
-            setBrandClassName(e => 'text-xl md:text-3xl lg:text-3xl ');
+            setNavbarYPadding('py-3 backdrop-blur-sm');
+            setBrandClassName(e => '');
         }
     };
 
@@ -49,8 +49,8 @@ export default function NavBar({className}) {
     return <div
         className={'fixed top-0 z-[10000] left-0 w-full duration-500 ' +
             navbarYPadding + (className ? ' ' + className : '')}>
-        <nav className="container">
-            <div className="flex items-stretch justify-between px-5">
+        <nav className="container px-5">
+            <div className="flex items-stretch justify-between">
                 {/* Nav Brand Area */}
                 <div
                     className={'flex flex-wrap items-center justify-start duration-300' +
@@ -80,7 +80,7 @@ export default function NavBar({className}) {
                         </AppLink>
 
                         <Link
-                            className={'hidden sm:inline-block font-black select-none whitespace-nowrap transition-all ' +
+                            className={'hidden sm:inline-block font-black select-none whitespace-nowrap transition-all text-5xl ' +
                                 brandClassName}
                             href={'/'}>
 
@@ -93,9 +93,10 @@ export default function NavBar({className}) {
                         </Link>
                     </div>
                 </div>
-                {<SearchArea searchFocused={searchFocused}
-                             placeholder={'AI Assistance ready!'}
-                             setSearchFocused={setSearchFocused}/>}
+
+                {false && <SearchArea searchFocused={searchFocused}
+                                      placeholder={'AI Assistance ready!'}
+                                      setSearchFocused={setSearchFocused}/>}
                 <div
                     className={'flex items-center justify-between text-xs duration-300 hover:opacity-100 ' +
                         (searchFocused

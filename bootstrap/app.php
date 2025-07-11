@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Register API middleware group
         $middleware->api([
+            \App\Http\Middleware\EnsureSameOrigin::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);

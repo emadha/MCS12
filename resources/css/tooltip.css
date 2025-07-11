@@ -1,0 +1,49 @@
+/* Tooltip styles */
+.tooltip-trigger {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+.tooltip-trigger:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Dark mode styles */
+.dark .tooltip {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+}
+
+.dark .tooltip::after {
+  border-color: rgba(255, 255, 255, 0.9) transparent transparent transparent;
+}

@@ -7,10 +7,8 @@ use App\Http\Resources\ListingItem\ListingItemBlocksResource;
 use App\Models\ListingItem;
 use App\Models\ListingItemsCar;
 use App\Models\PredefinedLocation;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use stdClass;
 
 class SearchController extends Controller
@@ -216,11 +214,8 @@ class SearchController extends Controller
         if (array_key_exists('location', $Criteria)
             && $Location = explode(',', ($Criteria['location'] ?: ''))
         ) {
-            $Location = collect($Location)->filter(function ($location) use (
-                $Criteria
-            ) {
-                return $location
-                    && PredefinedLocation::where('name', $location)
+            $Location = collect($Location)->filter(function ($location) use ($Criteria) {
+                return $location && PredefinedLocation::where('name', $location)
                         ->whereIn('region', [config('site.regions.current')])
                         ->exists();
             });

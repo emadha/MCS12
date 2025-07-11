@@ -8,6 +8,7 @@ import ReportForm from '@/Components/Forms/ReportForm';
 import {useContext, useState} from 'react';
 import LikeButton from '@/Components/Actions/LikeButton';
 import {AnimatePresence, motion} from 'framer-motion';
+import {ShopTypeIcons} from '@/Components/Icons';
 
 export default function ShopBlock({
     _k,
@@ -21,6 +22,7 @@ export default function ShopBlock({
         showLikes: true,
         showRating: true,
         showListings: true,
+        showTypes: true,
     },
 }) {
     const {lang, setModalData, setModalShow} = useContext(AppContext);
@@ -66,12 +68,6 @@ export default function ShopBlock({
                 type: 'spring',
                 stiffness: 200,
                 damping: 20,
-            },
-        },
-        hover: {
-            scale: 1.01,
-            transition: {
-                duration: 0.2,
             },
         },
         exit: {
@@ -193,7 +189,7 @@ export default function ShopBlock({
                     className={`
                         group dark:bg-white/5 rounded overflow-hidden
                         flex ${getLayoutClasses()}
-                        border border-transparent
+                        border border-transparent outline outline-1 outline-transparent transition-all hover:outline-accent
                         ${!loadedShop.is_approved ? 'border-red-500/20' : ''}
                     `}
                     whileHover="hover"
@@ -214,7 +210,7 @@ export default function ShopBlock({
                             >
                                 {loadedShop.primary_photo ? (
                                     <motion.img
-                                        src={loadedShop.primary_photo.path.square_sm}
+                                        src={loadedShop.primary_photo.path.square_md}
                                         className="object-cover w-full h-full rounded-t dark:bg-neutral-900/50"
                                         alt={loadedShop.title}
                                         variants={imageVariants}
@@ -312,6 +308,30 @@ export default function ShopBlock({
                                     </motion.span>
                                 )}
                             </motion.div>
+
+                            {/* Shop type icons */}
+                            {options.showTypes && loadedShop.types && loadedShop.types.length > 0 && (
+                                <motion.div
+                                    className="pt-3 flex flex-wrap gap-2 border-t border-border"
+                                    variants={itemVariants}
+                                    layout
+                                >
+                                    {loadedShop.types.map((type) => {
+                                        // Use the type.id to get the correct icon component
+                                        const IconComponent = ShopTypeIcons.ShopTypeIcons[type.id];
+                                        return IconComponent ? (
+                                            <motion.div
+                                                key={type.id}
+                                                className="tooltip-trigger opacity-20 hover:opacity-100"
+                                                transition={{duration: 0.2}}
+                                                title={type.title}
+                                            >
+                                                <IconComponent className="w-3 h-3"/>
+                                            </motion.div>
+                                        ) : null;
+                                    })}
+                                </motion.div>
+                            )}
                         </motion.div>
 
                     </Link>

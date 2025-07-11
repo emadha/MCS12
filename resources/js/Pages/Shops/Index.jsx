@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {AppContext} from '@/AppContext';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
 import Hr from '@/Components/Hr.jsx';
+import FilterBadges from '@/Components/Shops/FilterBadges.jsx';
 import TextInput from '@/Components/Form/TextInput.jsx';
 import Loading from '@/Components/Loading.jsx';
 import ShopBlock from '@/Components/Shops/ShopBlock.jsx';
@@ -11,6 +12,7 @@ import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton.jsx';
 import FlipWords from '@/Components/UI/flipwords.jsx';
 import {Checkbox} from 'antd';
 import Field from '@/Components/Form/Field.jsx';
+import {ShopTypeIcons} from '@/Components/Icons/ShopTypes/index.js';
 
 export default function Index({types, predefined_locations = []}) {
     const [shops, setShops] = useState([]);
@@ -98,7 +100,7 @@ export default function Index({types, predefined_locations = []}) {
 
 
             <div className={'flex w-full items-start'}>
-                <div className={'bg-white rounded-xl border w-2/6 p-10 pt-0'}>
+                <div className={'bg-grad-primary rounded-xl shadow-sm w-2/6 p-8 pt-0'}>
                     <div className={'sticky top-32'}>
                         <h3>Filter Shops</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,7 +115,7 @@ export default function Index({types, predefined_locations = []}) {
                         <Field title={'Location'}
                                collapsable
                                className={'px-0'}
-                               childrenClassName={'flex flex-wrap text-xs'}>
+                               childrenClassName={'flex flex-wrap'}>
                             {predefined_locations?.data?.map((location) => (
                                 <div className={'w-1/2 px-2 whitespace-nowrap'}>
                                     <Checkbox key={location.id}
@@ -140,30 +142,28 @@ export default function Index({types, predefined_locations = []}) {
                                className={'px-0'}
                                collapsable
                                childrenClassName={'flex flex-wrap my-5'}>
-                            {types.map((type) => (
-                                <div className={'w-1/2 px-2 whitespace-nowrap'}>
+
+                            {types.map((type) => {
+                                const IconComponent = ShopTypeIcons[type.id];
+                                return <div className={'w-1/2 px-2 whitespace-nowrap'}>
                                     <Checkbox
                                         value={type.id}
-                                        defaultChecked={filters.type ===
-                                            type.id.toString()}
-                                        className={'!p-0'}
+                                        defaultChecked={filters.type === type.id.toString()}
                                         onChange={(e) => setFilters({
                                             ...filters,
                                             type: e.target.checked
                                                 ? filters.type
-                                                    ? filters.type + ',' +
-                                                    type.id.toString()
+                                                    ? filters.type + ',' + type.id.toString()
                                                     : type.id.toString()
                                                 : filters.type.split(',').
-                                                    filter(t => t !==
-                                                        type.id.toString()).
-                                                    join(','),
+                                                    filter(t => t !== type.id.toString()).join(','),
                                         })}
                                     >
-                                        {type.title}</Checkbox>
-                                </div>
-
-                            ))}
+                                        {IconComponent && <IconComponent className="w-4 h-4 inline-block mr-2 -mt-0.5"/>}
+                                        {type.title}
+                                    </Checkbox>
+                                </div>;
+                            })}
                         </Field>
 
                         <Field title={'Rating'}
@@ -172,8 +172,8 @@ export default function Index({types, predefined_locations = []}) {
                                childrenClassName={'my-5'}>
                             <div className="flex flex-col space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm">Min: {filters.rating_min} stars</span>
-                                    <span className="text-sm">Max: {filters.rating_max} stars</span>
+                                    <span className="text-sm">Min: {filters.rating_min === null ? 'NA' : filters.rating_min} stars</span>
+                                    <span className="text-sm">Max: {filters.rating_max === null ? 'NA' : filters.rating_max} stars</span>
                                 </div>
                                 <div className="flex space-x-4">
                                     <input
@@ -181,11 +181,11 @@ export default function Index({types, predefined_locations = []}) {
                                         min="0"
                                         max="5"
                                         step="0.5"
-                                        value={filters.rating_min}
+                                        value={filters.rating_min ?? 0}
                                         onChange={(e) => setFilters({
                                             ...filters,
-                                            rating_min: parseFloat(e.target.value),
-                                            rating_max: Math.max(parseFloat(e.target.value), filters.rating_max)
+                                            rating_min: e.target.value === '0' ? null : parseFloat(e.target.value),
+                                            rating_max: e.target.value === '0' ? null : Math.max(parseFloat(e.target.value), filters.rating_max ?? 5),
                                         })}
                                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                                     />
@@ -194,11 +194,11 @@ export default function Index({types, predefined_locations = []}) {
                                         min="0"
                                         max="5"
                                         step="0.5"
-                                        value={filters.rating_max}
+                                        value={filters.rating_max ?? 5}
                                         onChange={(e) => setFilters({
                                             ...filters,
-                                            rating_max: parseFloat(e.target.value),
-                                            rating_min: Math.min(parseFloat(e.target.value), filters.rating_min)
+                                            rating_max: e.target.value === '5' ? null : parseFloat(e.target.value),
+                                            rating_min: e.target.value === '5' ? null : Math.min(parseFloat(e.target.value), filters.rating_min ?? 0),
                                         })}
                                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                                     />
@@ -223,10 +223,11 @@ export default function Index({types, predefined_locations = []}) {
                 </div>
 
                 <div className={'w-4/6 px-10'}>
+                    {!loading && <FilterBadges filters={filters} setFilters={setFilters} types={types} predefinedLocations={predefined_locations}/>}
                     {
                         loading ? (
                             <div className="min-h-[50vh]">
-                                <Loading loadingText="Loading shops..." className="py-44" background="" />
+                                <Loading loadingText="Loading shops..." className="py-44" background=""/>
                             </div>
                         ) : error ? (
                             <div className="min-h-[50vh] flex flex-col items-center justify-center">
@@ -243,11 +244,11 @@ export default function Index({types, predefined_locations = []}) {
                         ) : shops.length > 0 ? (
                             <>
                                 <div
-                                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 py-20">
+                                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 py-20">
                                     {shops.map(
-                                        (shop) => <ShopBlock variant={'wide'}
-                                                             shop={shop}
-                                                             key={shop.id}/>)}
+                                        (shop) => <ShopBlock
+                                            shop={shop}
+                                            key={shop.id}/>)}
                                 </div>
 
                                 <Hr className={'my-20'}/>

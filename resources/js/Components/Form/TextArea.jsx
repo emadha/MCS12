@@ -25,7 +25,7 @@ export default function TextArea({
         {icon && <FontAwesomeIcon icon={icon} className={'absolute left-3 top-3 dark:text-neutral-500'}/>}
         <textarea
             autoFocus={autofocus}
-            className={'t ' +
+            className={'fi ' +
                 (inputClassName ? inputClassName + ' ' : '') +
                 (hasError ? ' ring-orange-600 dark:ring-orange-600 ' : ' ') +
                 (icon ? ' !pl-9' : '')}

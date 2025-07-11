@@ -367,7 +367,6 @@
 }
 
 
-
 #gradient-canvas {
     width: 100%;
     height: 100%;
@@ -422,7 +421,7 @@ label {
     text-neutral-500  dark:text-neutral-500 rtl:text-right
 }
 
-input.i, textarea.i {
+input.fi, textarea.fi {
     @apply py-3 px-4 w-full transition-all border-gray-300 dark:bg-neutral-800 rounded-sm text-black
     disabled:bg-neutral-200/50 disabled:placeholder:text-neutral-200
     dark:hover:bg-neutral-400/30 dark:focus-within:bg-neutral-900/70
@@ -458,6 +457,7 @@ input.i, textarea.i {
         background-position: 100% 50%;
     }
 }
+
 .pagination-link {
     @apply py-1  rounded bg-neutral-800 px-3.5 shadow
 }
@@ -480,7 +480,7 @@ html {
 
 html:has(dialog[open]) {
     /* remove the main scrollbar when dialog is open */
-    overflow: initial!important;
+    overflow: initial !important;
 }
 
 .bg-grad-secondary {

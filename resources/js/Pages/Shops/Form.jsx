@@ -14,6 +14,7 @@ import {
     faPlus,
     faSave
 } from '@fortawesome/free-solid-svg-icons'
+import { ShopTypeIcons } from '@/Components/Icons/ShopTypes'
 import {useForm} from '@inertiajs/react'
 import InputError from '@/Components/Form/InputError'
 import React, {createRef, useContext, useEffect, useState} from 'react'
@@ -340,23 +341,29 @@ export default function Form({
                         <InputError message={errors.types} className={'mt-2'}/>
                         <small>{lang('Choose type(s) that suits your shop.')}</small>
                         <div className={'flex flex-wrap'}>
-                            {Object.values(data.types).map(type =>
-                                <Checkbox disabled={processing}
-                                          key={type.id}
-                                          name={'type'}
-                                          checked={shopTypes.find(t => t.id === type.id)?.checked || false}
-                                          value={type.id}
-                                          onChange={e => {
-                                              const updatedTypes = shopTypes.map(t => ({
-                                                  ...t,
-                                                  checked: t.id === parseInt(e.target.value) ? e.target.checked : t.checked
-                                              }));
-                                              setShopTypes(updatedTypes);
-                                              setData('types', updatedTypes);
-                                          }}
-                                          className={'w-full mx-auto sm:w-1/2 md:w-1/3'}
-                                >{lang(type.title)}
-                                </Checkbox>)
+                            {Object.values(data.types).map(type => {
+                                const IconComponent = ShopTypeIcons[type.id];
+                                return (
+                                    <Checkbox disabled={processing}
+                                              key={type.id}
+                                              name={'type'}
+                                              checked={shopTypes.find(t => t.id === type.id)?.checked || false}
+                                              value={type.id}
+                                              onChange={e => {
+                                                  const updatedTypes = shopTypes.map(t => ({
+                                                      ...t,
+                                                      checked: t.id === parseInt(e.target.value) ? e.target.checked : t.checked
+                                                  }));
+                                                  setShopTypes(updatedTypes);
+                                                  setData('types', updatedTypes);
+                                              }}
+                                              className={'w-full mx-auto sm:w-1/2 md:w-1/3'}
+                                    >
+                                        {IconComponent && <IconComponent className="w-5 h-5 inline-block mr-2" />}
+                                        {lang(type.title)}
+                                    </Checkbox>
+                                );
+                            })}
                             }
                         </div>
                     </Field>

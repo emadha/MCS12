@@ -373,7 +373,9 @@ export default function Wrapper({children}) {
 
         <AppContext.Provider value={{...fn}}>
             <div className={'relative z-10'}>
+
                 <NavBar auth={auth} className={'' + (url === '/' ? '' : '')}/>
+
                 <div className={'mx-auto flex flex-wrap transition-all'}>
                     <div className={'mx-auto w-full'}>
 
