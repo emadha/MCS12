@@ -1,56 +1,57 @@
-import {usePage} from '@inertiajs/react'
-import {useContext, useEffect, useState} from 'react'
-import {AppContext} from '@/AppContext'
-import HeroSection from "@/Components/HeroSection.jsx";
-import ShowRoomSection from "@/Components/ShowRoomSection.jsx";
-import ListingContainer from "@/Components/Listing/ListingContainer.jsx";
+import {usePage} from '@inertiajs/react';
+import {useContext, useEffect, useState} from 'react';
+import {AppContext} from '@/AppContext';
+import HeroSection from '@/Components/HeroSection.jsx';
+import ShowRoomSection from '@/Components/ShowRoomSection.jsx';
+import ListingContainer from '@/Components/Listing/ListingContainer.jsx';
+import Hr from '@/Components/Hr.jsx';
 
 export default function Index({
-                                  shops, latest_items = [], total = [],
-                              }) {
-    const {lang, setNavbarTransparent, formatNumbers} = useContext(AppContext)
-    const {auth} = usePage().props
-    const [show, setShow] = useState(true)
-    const [loadingShowrooms, setLoadingShowrooms] = useState(true)
-    const [showrooms, setShowrooms] = useState([])
-    const [promotedShowrooms, setPromotedShowrooms] = useState([])
-    const {api} = useContext(AppContext)
+    shops, latest_items = [], total = [],
+}) {
+    const {lang, setNavbarTransparent, formatNumbers} = useContext(AppContext);
+    const {auth} = usePage().props;
+    const [show, setShow] = useState(true);
+    const [loadingShowrooms, setLoadingShowrooms] = useState(true);
+    const [showrooms, setShowrooms] = useState([]);
+    const [promotedShowrooms, setPromotedShowrooms] = useState([]);
+    const {api} = useContext(AppContext);
 
     useEffect(e => {
-        const urlSearchParams = new URLSearchParams(location.search)
+        const urlSearchParams = new URLSearchParams(location.search);
 
-        setShow(true)
+        setShow(true);
 
         if (
             urlSearchParams.has('o') ||
             urlSearchParams.has('ec') ||
             urlSearchParams.has('c')
         ) {
-            goToListingContainer()
+            goToListingContainer();
         }
 
-    }, [])
+    }, []);
 
     const goToListingContainer = () => {
         setTimeout(() => {
-            document.getElementById('listingBlock')?.scrollIntoView({behavior: 'smooth'})
-        }, 100)
-    }
+            document.getElementById('listingBlock')?.scrollIntoView({behavior: 'smooth'});
+        }, 100);
+    };
 
     const PageBlock = ({className, children}) => {
         return <div className={'container my-5 p-2' + (className ? ' ' + className : '')}>
             <div className={'bg-grad-primary backdrop-blur-xl shadow py-5 px-10 rounded'}>
                 {children}
             </div>
-        </div>
-    }
+        </div>;
+    };
     useEffect(() => {
-        setLoadingShowrooms(true)
+        setLoadingShowrooms(true);
         api.get(route('api.showrooms')).then(res => {
-            setShowrooms(res.data.showrooms)
-            setPromotedShowrooms(res.data.promoted)
-        }).finally(f => setLoadingShowrooms(false))
-    }, [])
+            setShowrooms(res.data.showrooms);
+            setPromotedShowrooms(res.data.promoted);
+        }).finally(f => setLoadingShowrooms(false));
+    }, []);
 
     return <>
         <div className={'transition-all h-full w-full relative'}>
@@ -64,6 +65,7 @@ export default function Index({
                     promotedShowrooms={promotedShowrooms}
                     loadingShowrooms={loadingShowrooms}/>
 
+                <Hr className={'my-24 mb-20 max-w-32 mx-auto'}/>
                 <ListingContainer
                     type={'cars'}
                     hasSearch={true}/>
@@ -71,5 +73,5 @@ export default function Index({
             </div> : <></>}
 
         </div>
-    </>
+    </>;
 }

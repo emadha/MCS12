@@ -422,7 +422,7 @@ label {
     text-neutral-500  dark:text-neutral-500 rtl:text-right
 }
 
-input, textarea {
+input.i, textarea.i {
     @apply py-3 px-4 w-full transition-all border-gray-300 dark:bg-neutral-800 rounded-sm text-black
     disabled:bg-neutral-200/50 disabled:placeholder:text-neutral-200
     dark:hover:bg-neutral-400/30 dark:focus-within:bg-neutral-900/70
@@ -478,6 +478,11 @@ html {
     scrollbar-width: thin !important;
 }
 
+html:has(dialog[open]) {
+    /* remove the main scrollbar when dialog is open */
+    overflow: initial!important;
+}
+
 .bg-grad-secondary {
     @apply
     bg-[radial-gradient(300.75%_100%_at_50%_0%,#fafafa_0%,#fff_48.73%)]
@@ -501,7 +506,7 @@ html {
 }
 
 .container {
-    max-width: 1400px
+    max-width: 1500px
 }
 
 .main-btn {

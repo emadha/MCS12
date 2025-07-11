@@ -93,8 +93,9 @@ export default function NavBar({className}) {
                         </Link>
                     </div>
                 </div>
-                {false && <SearchArea searchFocused={searchFocused}
-                                      setSearchFocused={setSearchFocused}/>}
+                {<SearchArea searchFocused={searchFocused}
+                             placeholder={'AI Assistance ready!'}
+                             setSearchFocused={setSearchFocused}/>}
                 <div
                     className={'flex items-center justify-between text-xs duration-300 hover:opacity-100 ' +
                         (searchFocused

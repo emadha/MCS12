@@ -1,11 +1,11 @@
-import { Fragment, useContext, useState } from 'react'
-import { Combobox, Transition } from '@headlessui/react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faChevronDown, faMultiply } from '@fortawesome/free-solid-svg-icons'
-import { isArray } from 'lodash'
-import { AppContext } from '@/AppContext'
+import {Fragment, useContext, useState} from 'react';
+import {Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition} from '@headlessui/react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck, faChevronDown, faMultiply} from '@fortawesome/free-solid-svg-icons';
+import {isArray} from 'lodash';
+import {AppContext} from '@/AppContext';
 
-export default function Select ({
+export default function Select({
     name,
     className,
     options = [],
@@ -21,15 +21,15 @@ export default function Select ({
 }) {
 
     // Take RTL from Context or false
-    const { rtl } = useContext(AppContext) ?? false
+    const {rtl} = useContext(AppContext) ?? false;
 
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState('');
 
     const [selected, setSelected] = useState(
         multi
             ? defaultValue !== null ? isArray(defaultValue) ? defaultValue : [] : []
             : defaultValue !== null ? defaultValue : null,
-    )
+    );
     const filteredOptions =
         query === ''
             ? options
@@ -37,15 +37,15 @@ export default function Select ({
                 option.label?.toString().toLowerCase()?.
                     replace(/\s+/g, '').
                     includes(query.toString().toLowerCase().replace(/\s+/g, '')),
-            )
+            );
 
     const onChange = (e) => {
-        setSelected(e)
+        setSelected(e);
         if (typeof handleOnChange === 'function') {
-            return handleOnChange({ value: e, option: options?.filter(o => o.value === e)[0] })
+            return handleOnChange({value: e, option: options?.filter(o => o.value === e)[0]});
         }
-        return selected
-    }
+        return selected;
+    };
 
     return <div className={'relative ' + (className ? ' ' + className : '')}>
         <Combobox name={name} value={selected} onChange={onChange} disabled={disabled}
@@ -53,25 +53,25 @@ export default function Select ({
 
             <div
                 className={'relative text-left group'}>
-                <Combobox.Input
-                    className={'select-none text-black dark:text-white cursor-default focus-visible:ring-1 hover:ring-1 '
+                <ComboboxInput
+                    className={'i select-none text-black dark:text-white cursor-default '
                         + (hasError ? ' ring-orange-600 dark:ring-orange-600 ' : '')
-                        + (leftIcon || (clearable && selected !== null) ? ' px-10 ' : '')}
+                        + (leftIcon || (clearable && selected !== null) ? ' !px-10 ' : '')}
                     displayValue={v => {
                         if (multi) {
-                            let filtered = options.filter(e => v.includes(e.value)) ?? []
+                            let filtered = options.filter(e => v.includes(e.value)) ?? [];
                             return filtered?.length > 5
                                 ? filtered.length + ' Selected'
-                                : filtered.map(e => e.label).join(', ')
+                                : filtered.map(e => e.label).join(', ');
                         } else {
-                            return options.filter(e => v === e.value)[0]?.label || defaultValue?.option?.label // < was || 'selected'
+                            return options.filter(e => v === e.value)[0]?.label || defaultValue?.option?.label; // < was || 'selected'
                         }
                     }}
                     placeholder={placeholder}
                     onChange={(e) => {
-                        setQuery(e.target.value)
+                        setQuery(e.target.value);
                         if (typeof onInputChange === 'function') {
-                            return onInputChange(e)
+                            return onInputChange(e);
                         }
                     }}
                 />
@@ -94,14 +94,14 @@ export default function Select ({
                     </button>
                 }
 
-                <Combobox.Button
+                <ComboboxButton
                     className={'absolute text-black dark:text-white disabled:bg-transparent dark:disabled:bg-transparent px-4 py-4 text-xs ' +
                         'inset-y-0 flex items-center rounded-r overflow-hidden ' +
                         'dark:disabled:text-neutral-700 disabled:text-neutral-300 ' +
                         (rtl ? ' left-0 ' : ' right-0 ') +
                         'dark:hover:bg-neutral-600/20 hover:bg-indigo-50'}>
                     <FontAwesomeIcon icon={faChevronDown} className={''}/>
-                </Combobox.Button>
+                </ComboboxButton>
 
             </div>
             <Transition
@@ -111,22 +111,23 @@ export default function Select ({
                 leaveTo="opacity-0"
                 afterLeave={() => setQuery('')}
             >
-                <Combobox.Options
-                    className="absolute left-0 top-7 z-10 max-h-56 w-full overflow-auto dark:bg-neutral-800 bg-white dark:border-t-0 dark:border-neutral-900 border t-1 shadow-xl text-sm">
+                <ComboboxOptions
+                    modal={false}
+                    className="absolute left-0 top-12 glass z-10 max-h-72 w-full overflow-auto shadow-xl text-sm">
                     {filteredOptions?.length === 0 && query !== '' ? (
                         <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                             Nothing found.
                         </div>
                     ) : (
                         filteredOptions?.map((option) => (
-                            <Combobox.Option
+                            <ComboboxOption
                                 key={name + '_' + option.value}
-                                className={({ active }) =>
+                                className={({active}) =>
                                     'relative dark:text-white cursor-pointer select-none py-2 pl-3 pr-4 ' +
                                     (active ? 'bg-blue-700 text-white dark:bg-indigo-700/30' : 'text-gray-900')
                                 }
                                 value={option.value}>
-                                {({ selected, active }) =>
+                                {({selected, active}) =>
                                     <div className={`flex gap-x-1 items-center block truncate ${selected
                                         ? 'font-medium'
                                         : 'font-normal'}`}>
@@ -137,11 +138,11 @@ export default function Select ({
                                         <span>{option.label}</span>
                                     </div>
                                 }
-                            </Combobox.Option>
+                            </ComboboxOption>
                         ))
                     )}
-                </Combobox.Options>
+                </ComboboxOptions>
             </Transition>
         </Combobox>
-    </div>
+    </div>;
 }

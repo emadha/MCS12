@@ -1,10 +1,6 @@
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {
-    faEllipsisV,
-    faExclamationTriangle,
-    faSpinner,
-} from '@fortawesome/free-solid-svg-icons';
+import {faEllipsisV, faExclamationTriangle, faSpinner} from '@fortawesome/free-solid-svg-icons';
 import {useContext, useState} from 'react';
 import {AppContext} from '@/AppContext';
 import Hr from '@/Components/Hr';
@@ -22,19 +18,7 @@ export default function ContextMenu({
 
     const openContextMenu = (open, e, close) => {
 
-        e.stopPropagation();
-        // Used to not call axios if you're clicking to close the menu
 
-        setContextMenu([
-            {
-                title: <div
-                    className={'flex w-full text-xs items-center justify-center'}>
-                    <FontAwesomeIcon className={'inline-block'} icon={faSpinner}
-                                     spin={true}/>
-                </div>,
-                disabled: true,
-            },
-        ]);
 
         try {
             // Get the relevant context menu items
@@ -54,6 +38,7 @@ export default function ContextMenu({
         }
 
     };
+
 
     return <>
         <div
@@ -75,22 +60,22 @@ export default function ContextMenu({
                     </MenuButton>
                     <MenuItems
                         transition
+                        modal={false}
                         anchor={'bottom end'}
-                        className="z-[1000] w-40 mt-1 origin-top-right glass p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0">
+                        className="z-[1000] w-40 mt-1 origin-top-right glass p-1 text-sm/6 transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0">
                         {contextMenu.length ? contextMenu.map(
                             contextMenuItem => contextMenuItem.title === '-'
-                                ? <div key={h + contextMenuItem.title}
+                                ? <div key={contextMenuItem.title + Math.random()}
                                        className={'w-full clear-both'}><Hr
                                     className={'!my-1'}/></div>
                                 : <MenuItem
-                                    disabled={contextMenuItem.disabled ??
-                                        false}
-                                    key={contextMenuItem.title}
+                                    disabled={!!contextMenuItem.disabled}
+                                    key={contextMenuItem.title + Math.random()}
                                     className={'w-full flex items-center gap-x-1 justify-between flex-row-reverse'}>
                                     {({active, disabled}) =>
                                         <div onClick={() => onClick(
                                             contextMenuItem.action_id)}
-                                             className={`select-none text-white opacity-60 transition-all hover:opacity-100 cursor-pointer px-5 py-2 flex items-end justify-end group/itemBlockItem
+                                             className={`select-none dark:text-white text-black opacity-60 transition-all hover:opacity-100 cursor-pointer px-5 py-2 flex items-end justify-end group/itemBlockItem
                                           ${active &&
                                              ' text-white bg-indigo-500 '}
                                           ${disabled &&

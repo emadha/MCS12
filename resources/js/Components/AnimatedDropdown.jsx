@@ -40,7 +40,7 @@ const AnimatedDropdown = ({
         if (open !== isOpen) setIsOpen(open);
         return (
           <>
-            <Menu.Button as={Fragment}>{trigger}</Menu.Button>
+            <Menu.Button as={'div'}>{trigger}</Menu.Button>
 
             <AnimatePresence>
               {isOpen && (

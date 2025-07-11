@@ -1,9 +1,9 @@
-import { createRef, useContext, useEffect, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { AppContext } from '@/AppContext'
+import {createRef, useContext, useEffect, useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSpinner, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {AppContext} from '@/AppContext';
 
-export default function TextInput (
+export default function TextInput(
     {
         icon,
         iconInline = true,
@@ -39,41 +39,41 @@ export default function TextInput (
         keepPositiveIfNumeric = false,
     }) {
 
-    const input = createRef()
-    const { rtl } = useContext(AppContext)
-    const [currentValue, setCurrentValue] = useState(value)
+    const input = createRef();
+    const {rtl} = useContext(AppContext);
+    const [currentValue, setCurrentValue] = useState(value);
     useEffect(() => {
         if (isFocused) {
-            input.current?.focus()
+            input.current?.focus();
         }
-        setCurrentValue(defaultValue)
-    }, [])
+        setCurrentValue(defaultValue);
+    }, []);
 
     const clear = (e) => {
-        onClearEvent(e)
-        setCurrentValue('')
-        handleChange(e)
-    }
+        onClearEvent(e);
+        setCurrentValue('');
+        handleChange(e);
+    };
 
     const onClearEvent = (e) => {
-        typeof onClear != 'undefined' && onClear(e)
-    }
+        typeof onClear != 'undefined' && onClear(e);
+    };
 
     const onChange = (e) => {
 
         if (type === 'number' && keepPositiveIfNumeric) {
-            e.target.value = Math.floor(Math.max(e.target.value, 0))
+            e.target.value = Math.floor(Math.max(e.target.value, 0));
         }
 
-        setCurrentValue(e.target.value)
-        typeof handleChange != 'undefined' && handleChange(e)
-    }
+        setCurrentValue(e.target.value);
+        typeof handleChange != 'undefined' && handleChange(e);
+    };
 
     const handleKeyDown = (e) => {
         if (e.keyCode === 27 && clearable) {
-            clear(e)
+            clear(e);
         }
-    }
+    };
 
     return <div className={'text-neutral-400 relative ' + (className ? ' ' + className : '')}>
 
@@ -87,7 +87,7 @@ export default function TextInput (
         {isLoading && <FontAwesomeIcon icon={faSpinner} spin={true} className={'right-3 top-4 absolute'}/>}
         <input autoComplete={autoComplete}
                className={
-                   ' '
+                   'i '
                    + (icon ? (rtl ? '!pr-10' : '!pl-10 ') : '')
                    + (inputClassName ? ' ' + inputClassName : '') + ' '
                    + (hasError ? ' ring-orange-600 dark:ring-orange-600' : '')
@@ -118,5 +118,5 @@ export default function TextInput (
                 className={'absolute cursor-pointer hover:!text-red-500 rtl:right-[95%] right-3 top-4 dark:text-neutral-500'}/>
             : <></>}
         {labelAfter && label && id && <label className={'select-none whitespace-nowrap'} htmlFor={id}>{label}</label>}
-    </div>
+    </div>;
 }

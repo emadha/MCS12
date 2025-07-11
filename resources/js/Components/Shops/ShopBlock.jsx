@@ -30,7 +30,7 @@ export default function ShopBlock({
 
     // Animation variants
     const containerVariants = {
-        hidden: {opacity: 0, scale: 0.95},
+        hidden: {opacity: 0},
         visible: {
             opacity: 1,
             scale: 1,
@@ -41,7 +41,6 @@ export default function ShopBlock({
             },
         },
         hover: {
-            scale: 1.05,
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
             transition: {
                 duration: 0.2,
@@ -91,7 +90,7 @@ export default function ShopBlock({
             },
         },
         hover: {
-            scale: 1.1,
+            scale: 1.01,
             transition: {
                 duration: 0.3,
                 ease: 'easeOut',
@@ -209,7 +208,7 @@ export default function ShopBlock({
                     >
                         {options.showImage && (
                             <motion.div
-                                className={`h-full overflow-hidden relative ${getImageClasses()}`}
+                                className={`h-full relative ${getImageClasses()}`}
                                 variants={itemVariants}
                                 layout
                             >

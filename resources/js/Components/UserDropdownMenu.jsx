@@ -68,6 +68,7 @@ export default function UserDropdownMenu ({ k, user }) {
             <div className={'absolute right-0 rtl:left-0 rtl:right-auto z-[100000] text-lg lg:text-sm'}>
 
                 <Menu.Items
+                    modal={false}
                     className={'mt-1 bg-grad-secondary shadow-xl overflow-hidden rounded-lg flex justify-end flex-wrap text-sm'}>
 
                     {user.data.contextMenu.map((contextMenu, i) =>
