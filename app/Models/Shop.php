@@ -107,6 +107,23 @@ class Shop extends Base
     }
 
     /**
+     * Filter shops by rating range
+     * 
+     * @param Builder $query
+     * @param float $min Minimum rating (0-5)
+     * @param float $max Maximum rating (0-5)
+     * 
+     * @return void
+     */
+    public function scopeRatingRange(Builder $query, float $min, float $max): void
+    {
+        $query->whereHas('reviews', function ($q) use ($min, $max) {
+            $q->selectRaw('AVG(rating) as avg_rating')
+              ->havingRaw('avg_rating >= ? AND avg_rating <= ?', [$min, $max]);
+        });
+    }
+
+    /**
      * @param Builder $query
      *
      * @return void

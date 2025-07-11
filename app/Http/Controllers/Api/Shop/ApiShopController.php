@@ -26,6 +26,12 @@ class ApiShopController extends Controller
             $query->type(explode(',', $request->get('type')));
         }
 
+        if ($request->has('rating_min') && $request->has('rating_max')) {
+            $min = (float)$request->get('rating_min', 0);
+            $max = (float)$request->get('rating_max', 5);
+            $query->ratingRange($min, $max);
+        }
+
         return ShopBlockResource::collection($query->paginate(12));
     }
 }

@@ -3,6 +3,7 @@ import {AppContext} from '@/AppContext';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
 import Hr from '@/Components/Hr.jsx';
 import TextInput from '@/Components/Form/TextInput.jsx';
+import Loading from '@/Components/Loading.jsx';
 import ShopBlock from '@/Components/Shops/ShopBlock.jsx';
 import {AnimatePresence} from 'framer-motion';
 import Card from '@/Components/Card.jsx';
@@ -21,12 +22,15 @@ export default function Index({types, predefined_locations = []}) {
         links: [],
     });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [filters, setFilters] = useState({
         title: '',
         location: '',
         type: '',
         contact_method: '',
         predefined_location: '',
+        rating_min: 0,
+        rating_max: 5,
     });
     const {api} = useContext(AppContext);
 
@@ -45,6 +49,7 @@ export default function Index({types, predefined_locations = []}) {
 
     const fetchShops = async () => {
         setLoading(true);
+        setError(null);
         try {
             const response = await api.get(route('api.shops.index'), {
                 params: filters,
@@ -62,6 +67,8 @@ export default function Index({types, predefined_locations = []}) {
 
         } catch (error) {
             console.error('Error fetching shops:', error);
+            setError(error.message || 'An error occurred while fetching shops');
+            setShops([]);
         } finally {
             setLoading(false);
         }
@@ -69,30 +76,29 @@ export default function Index({types, predefined_locations = []}) {
 
     return <>
         <div className="container mt-32 mx-auto p-4">
-            <>
-                <div
-                    className={'max-w-4xl my-20 mb-32 drop-shadow-[0_0px_100px_#fff] mx-auto text-center'}>
-                    <h1>Find Your Perfect
-                        <p className={'refined-gradient'}>
-                            <AnimatePresence mode="wait">
-                                <FlipWords words={[
-                                    'Shop',
-                                    'Showroom',
-                                    'Tuner',
-                                    'Rentals',
-                                    'Service Center']}/>
-                            </AnimatePresence>
-                        </p>
-                    </h1>
-                    <p className={'-mt-40'}>Connect with verified showrooms,
-                        expert tuners, luxury
-                        rentals, and premium service centers. Experience
-                        automotive excellence at every level.</p>
-                </div>
-            </>
+
+            <div className={'max-w-4xl my-20 mb-32 dark:drop-shadow-[0_0px_100px_#fff] drop-shadow-[0_0px_100px_#acf] mx-auto text-center'}>
+                <h1>Find Your Perfect
+                    <p className={'refined-gradient'}>
+                        <AnimatePresence mode="wait">
+                            <FlipWords words={[
+                                'Shop',
+                                'Showroom',
+                                'Tuner',
+                                'Rentals',
+                                'Service Center']}/>
+                        </AnimatePresence>
+                    </p>
+                </h1>
+                <p className={'-mt-40'}>Connect with verified showrooms,
+                    expert tuners, luxury
+                    rentals, and premium service centers. Experience
+                    automotive excellence at every level.</p>
+            </div>
+
 
             <div className={'flex w-full items-start'}>
-                <Card className={'w-1/4 px-5'}>
+                <div className={'bg-white rounded-xl border w-2/6 p-10 pt-0'}>
                     <div className={'sticky top-32'}>
                         <h3>Filter Shops</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -105,6 +111,7 @@ export default function Index({types, predefined_locations = []}) {
                             />
                         </div>
                         <Field title={'Location'}
+                               collapsable
                                className={'px-0'}
                                childrenClassName={'flex flex-wrap text-xs'}>
                             {predefined_locations?.data?.map((location) => (
@@ -131,6 +138,7 @@ export default function Index({types, predefined_locations = []}) {
                         <Hr/>
                         <Field title={'Type of Service'}
                                className={'px-0'}
+                               collapsable
                                childrenClassName={'flex flex-wrap my-5'}>
                             {types.map((type) => (
                                 <div className={'w-1/2 px-2 whitespace-nowrap'}>
@@ -157,6 +165,54 @@ export default function Index({types, predefined_locations = []}) {
 
                             ))}
                         </Field>
+
+                        <Field title={'Rating'}
+                               className={'px-0'}
+                               collapsable
+                               childrenClassName={'my-5'}>
+                            <div className="flex flex-col space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm">Min: {filters.rating_min} stars</span>
+                                    <span className="text-sm">Max: {filters.rating_max} stars</span>
+                                </div>
+                                <div className="flex space-x-4">
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="5"
+                                        step="0.5"
+                                        value={filters.rating_min}
+                                        onChange={(e) => setFilters({
+                                            ...filters,
+                                            rating_min: parseFloat(e.target.value),
+                                            rating_max: Math.max(parseFloat(e.target.value), filters.rating_max)
+                                        })}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="5"
+                                        step="0.5"
+                                        value={filters.rating_max}
+                                        onChange={(e) => setFilters({
+                                            ...filters,
+                                            rating_max: parseFloat(e.target.value),
+                                            rating_min: Math.min(parseFloat(e.target.value), filters.rating_min)
+                                        })}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-xs">0</span>
+                                    <span className="text-xs">1</span>
+                                    <span className="text-xs">2</span>
+                                    <span className="text-xs">3</span>
+                                    <span className="text-xs">4</span>
+                                    <span className="text-xs">5</span>
+                                </div>
+                            </div>
+                        </Field>
                         <PrimaryButton
                             className="mt-4"
                             icon={faSearch}
@@ -164,17 +220,27 @@ export default function Index({types, predefined_locations = []}) {
                         >
                             Search
                         </PrimaryButton></div>
-                </Card>
+                </div>
 
-                <div className={'w-3/4 px-10'}>
+                <div className={'w-4/6 px-10'}>
                     {
                         loading ? (
-                            <div
-                                className="flex justify-center items-center min-h-[50vh]">
-                                <div
-                                    className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                            <div className="min-h-[50vh]">
+                                <Loading loadingText="Loading shops..." className="py-44" background="" />
                             </div>
-                        ) : (
+                        ) : error ? (
+                            <div className="min-h-[50vh] flex flex-col items-center justify-center">
+                                <div className="text-center p-10 rounded-lg bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border border-red-200 dark:border-red-800">
+                                    <h3 className="text-xl font-semibold mb-2 text-red-600 dark:text-red-400">Error</h3>
+                                    <p className="text-red-500 dark:text-red-300">{error}</p>
+                                    <button
+                                        onClick={fetchShops}
+                                        className="mt-4 px-4 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-800 dark:hover:bg-red-700 text-red-600 dark:text-red-200 rounded-md text-sm font-medium transition-colors">
+                                        Try Again
+                                    </button>
+                                </div>
+                            </div>
+                        ) : shops.length > 0 ? (
                             <>
                                 <div
                                     className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 py-20">
@@ -211,6 +277,13 @@ export default function Index({types, predefined_locations = []}) {
                                     ))}
                                 </div>
                             </>
+                        ) : (
+                            <div className="min-h-[50vh] flex flex-col items-center justify-center">
+                                <div className="text-center p-10 rounded-lg bg-white/5 backdrop-blur-sm">
+                                    <h3 className="text-xl font-semibold mb-2">No shops found</h3>
+                                    <p className="text-gray-500 dark:text-gray-400">Try adjusting your filters to find more results.</p>
+                                </div>
+                            </div>
                         )
                     }
                 </div>
