@@ -189,7 +189,7 @@ class Photo extends Base
             throw new Exception('Type not found Exception');
         }
 
-        $pathByType = self::TYPES[$this->item_type] . DIRECTORY_SEPARATOR . $this->item->id;
+        $pathByType = self::TYPES[$this->item_type] . ($this->item?->id ? '/' . $this->item->id : null);
         $photosStorage = Storage::disk('photos')->path($pathByType . DIRECTORY_SEPARATOR);
 
         // Full image path

@@ -26,6 +26,6 @@ class ApiShopController extends Controller
             $query->type(explode(',', $request->get('type')));
         }
 
-        return ShopBlockResource::collection($query->paginate(5));
+        return ShopBlockResource::collection($query->paginate(12));
     }
 }

@@ -6,6 +6,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {Link} from '@inertiajs/react';
 import Hr from '@/Components/Hr.jsx';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import FlipWords from '@/Components/UI/flipwords.jsx';
 
 function HeroSection({latestItems}) {
     const {lang} = useContext(AppContext);
@@ -17,30 +18,15 @@ function HeroSection({latestItems}) {
                 <div className={'w-1/2 sticky top-32 h-full'}>
                     <div>
                         <div
-                            className={'px-2 bg-foreground/10 inline-block txt-xs'}>
-                            Mecarshop is a new way to buy and sell your dream
-                            car.
+                            className={'px-2 inline-block txt-xs'}>
+                            Mecarshop is a new way to <strong>love your car</strong>.
                         </div>
                     </div>
                     <h1 className={'leading-10 my-5'}>
                         Discover Your
                         <div
-                            className={'text-7xl refined-gradient h-20 mt-1'}>
-                            <AnimatePresence mode="wait">
-                                <motion.span
-                                    key={new Date().getTime()}
-                                    initial={{opacity: 0, y: 20}}
-                                    animate={{opacity: 1, y: 0}}
-                                    exit={{opacity: 0, y: -20}}
-                                    transition={{duration: 1}}
-                                >
-                                    {[
-                                        'Dream Car',
-                                        'Perfect Garage',
-                                        'Best Carwash'][Math.floor(
-                                        (Date.now() / 2000) % 3)]}
-                                </motion.span>
-                            </AnimatePresence>
+                            className={'drop-shadow-lg text-7xl refined-gradient h-20 mt-1'}>
+                            <FlipWords words={['Dream Car', 'Perfect Store', 'Best Shop']}/>
                         </div>
                         Experience
                     </h1>

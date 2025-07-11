@@ -1,10 +1,4 @@
-import {
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    Transition,
-} from '@headlessui/react';
+import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
     faEllipsisV,
@@ -14,6 +8,7 @@ import {
 import {useContext, useState} from 'react';
 import {AppContext} from '@/AppContext';
 import Hr from '@/Components/Hr';
+import {clsx} from 'clsx';
 
 export default function ContextMenu({
     className,
@@ -30,13 +25,14 @@ export default function ContextMenu({
         e.stopPropagation();
         // Used to not call axios if you're clicking to close the menu
 
-        // Set context menu text whilst loading
         setContextMenu([
             {
-                title: <div className={'text-center'}>
-                    <FontAwesomeIcon className={'text-center'} icon={faSpinner}
+                title: <div
+                    className={'flex w-full text-xs items-center justify-center'}>
+                    <FontAwesomeIcon className={'inline-block'} icon={faSpinner}
                                      spin={true}/>
                 </div>,
+                disabled: true,
             },
         ]);
 
@@ -59,42 +55,42 @@ export default function ContextMenu({
 
     };
 
-    return <div
-        className={'relative z-auto ' + (className ? ' ' + className : '')}>
-        {/* Context Menu */}
-        <Menu>
-            {({open, close}) => (<>
-                <MenuButton
-                    className="sinline-flex items-center gap-2 rounded-md bg-gray-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-700 data-open:bg-gray-700"
-                    onClick={(e) => openContextMenu(open, e, close)}>
-                    <FontAwesomeIcon className={''} icon={faEllipsisV}/>
-                    {text ? <span>{text}</span> : <></>}
-                </MenuButton>
-                <Transition show={open}
-                            className={'absolute right-0 rtl:left-0 rtl:right-auto z-[100000]'}
-                            enter={'duration-150'}
-                            enterFrom={'opacity-0 top-0 scale-105'}
-                            enterTo={'opacity-100 top-11 scale-100'}
-                            leave={'duration-100'}
-                            leaveFrom={'opacity-100 top-11 scale-100'}
-                            leaveTo={'opacity-0 scale-105 top-0'}
-                >
+    return <>
+        <div
+            className={'relative z-auto ' + (className ? ' ' + className : '')}>
+            {/* Context Menu */}
+            <Menu>
+                {({open, close}) => (<>
+                    <MenuButton
+                        as={'button'}
+                        className={clsx(
+                            'w-10 aspect-square focus:!outline-none hover:bg-white/5 transition-all duration-2000',
+                            open
+                                ? '!bg-white/20'
+                                : '')}
+                        onClick={(e) => openContextMenu(open, e, close)}>
+                        <FontAwesomeIcon className={'text-base'}
+                                         icon={faEllipsisV}/>
+                        {text ? <span>{text}</span> : <></>}
+                    </MenuButton>
                     <MenuItems
+                        transition
                         anchor={'bottom end'}
-                        className="w-52 origin-top-right rounded-xl border border-white/5 glass p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0">
+                        className="z-[1000] w-40 mt-1 origin-top-right glass p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0">
                         {contextMenu.length ? contextMenu.map(
                             contextMenuItem => contextMenuItem.title === '-'
                                 ? <div key={h + contextMenuItem.title}
                                        className={'w-full clear-both'}><Hr
                                     className={'!my-1'}/></div>
                                 : <MenuItem
-                                    disabled={contextMenuItem.disabled ?? false}
+                                    disabled={contextMenuItem.disabled ??
+                                        false}
                                     key={contextMenuItem.title}
                                     className={'w-full flex items-center gap-x-1 justify-between flex-row-reverse'}>
                                     {({active, disabled}) =>
                                         <div onClick={() => onClick(
                                             contextMenuItem.action_id)}
-                                             className={`select-none dark:text-white text-black opacity-60 transition-all hover:opacity-100 cursor-pointer px-5 py-2 flex items-end justify-end group/itemBlockItem
+                                             className={`select-none text-white opacity-60 transition-all hover:opacity-100 cursor-pointer px-5 py-2 flex items-end justify-end group/itemBlockItem
                                           ${active &&
                                              ' text-white bg-indigo-500 '}
                                           ${disabled &&
@@ -119,8 +115,8 @@ export default function ContextMenu({
                                     }
                                 </MenuItem>) : <></>}
                     </MenuItems>
-                </Transition>
-            </>)}
-        </Menu>
-    </div>;
+                </>)}
+            </Menu>
+        </div>
+    </>;
 }

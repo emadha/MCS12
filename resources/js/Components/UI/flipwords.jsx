@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AppContext } from '@/AppContext'
 
-export default function FlipWords ({ beforeText, words, duration = 5000, className }) {
+export default function FlipWords ({ beforeText, words, duration = 3000, className }) {
     const { rtl } = useContext(AppContext)
     const [currentWord, setCurrentWord] = useState(words[0])
     const [isAnimating, setIsAnimating] = useState(false)
@@ -23,7 +23,7 @@ export default function FlipWords ({ beforeText, words, duration = 5000, classNa
     }, [isAnimating, duration, startAnimation])
 
     return <div className={'relative min-h-56'}>
-        <span className={'font-black text-6xl rtl:hidden dark:text-yellow-500'}>{beforeText}</span>
+        {beforeText && <span className={'font-black text-6xl rtl:hidden dark:text-yellow-500'}>{beforeText}</span>}
         <AnimatePresence
             onExitComplete={() => {
                 setIsAnimating(false)
@@ -33,7 +33,7 @@ export default function FlipWords ({ beforeText, words, duration = 5000, classNa
                 className={className}
                 initial={{
                     opacity: 0,
-                    y: -100,
+                    y: 10,
                 }}
                 animate={{
                     opacity: 1,
@@ -41,31 +41,45 @@ export default function FlipWords ({ beforeText, words, duration = 5000, classNa
                 }}
                 transition={{
                     type: 'spring',
-                    stiffness: 130,
+                    stiffness: 100,
                     damping: 10,
                 }}
                 exit={{
                     opacity: 0,
-                    y: 100,
-                    x: 0,
-                    filter: 'blur(10px)',
+                    y: -40,
+                    x: 40,
+                    filter: 'blur(8px)',
                     scale: 2,
                     position: 'absolute',
-                    top: 0,
                 }}
                 key={currentWord}
             >
-                {!rtl ? currentWord.split('').map((letter, index) => (
+                {!rtl ? currentWord.split(' ').map((word, wordIndex) => (
                     <motion.span
-                        key={currentWord + index}
-                        initial={{ opacity: 0, y: -10, filter: 'blur(20px)' }}
+                        key={word + wordIndex}
+                        initial={{ opacity: 0, y: 10, filter: 'blur(8px)' }}
                         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                         transition={{
-                            delay: (index * Math.random() / 3) * 0.06,
+                            delay: wordIndex * 0.3,
+                            duration: 0.3,
                         }}
-                        className="inline-block"
+                        className="inline-block whitespace-nowrap"
                     >
-                        <span dangerouslySetInnerHTML={{ __html: letter.replace(' ', '&nbsp;') }}/>
+                        {word.split('').map((letter, letterIndex) => (
+                            <motion.span
+                                key={word + letterIndex}
+                                initial={{ opacity: 0, y: 10, filter: 'blur(8px)' }}
+                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                transition={{
+                                    delay: wordIndex * 0.3 + letterIndex * 0.05,
+                                    duration: 0.2,
+                                }}
+                                className="inline-block"
+                            >
+                                {letter}
+                            </motion.span>
+                        ))}
+                        <span className="inline-block">&nbsp;</span>
                     </motion.span>
                 )) : <motion.span
                     key={currentWord}

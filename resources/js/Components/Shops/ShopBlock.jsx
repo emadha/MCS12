@@ -1,170 +1,184 @@
-import {Link, router, usePage} from '@inertiajs/react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCube, faListDots, faStore} from '@fortawesome/free-solid-svg-icons'
-import ContextMenu from '@/Components/ContextMenu'
-import {AppContext} from '@/AppContext'
-import ConfirmForm from '@/Components/Forms/ConfirmForm'
-import ReportForm from '@/Components/Forms/ReportForm'
-import {useContext, useState} from 'react'
-import LikeButton from '@/Components/Actions/LikeButton'
-import {motion, AnimatePresence} from 'framer-motion'
+import {Link, router, usePage} from '@inertiajs/react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faListDots, faStar, faStore} from '@fortawesome/free-solid-svg-icons';
+import ContextMenu from '@/Components/ContextMenu';
+import {AppContext} from '@/AppContext';
+import ConfirmForm from '@/Components/Forms/ConfirmForm';
+import ReportForm from '@/Components/Forms/ReportForm';
+import {useContext, useState} from 'react';
+import LikeButton from '@/Components/Actions/LikeButton';
+import {AnimatePresence, motion} from 'framer-motion';
 
-    export default function ShopBlock({
+export default function ShopBlock({
     _k,
     className = '',
     shop,
-    variant = 'wide', // 'square', 'wide', 'tall'
+    variant = 'square', // 'square', 'wide', 'tall'
     options = {
         showImage: true,
         showTitle: true,
+        showShortDescription: true,
         showLikes: true,
-        showListings: true
-    }
-    }) {
-    const {lang, setModalData, setModalShow} = useContext(AppContext)
-    const [loadedShop, setLoadedShop] = useState(shop)
-    const [isHovered, setIsHovered] = useState(false)
-    const {user} = usePage().props.auth
+        showRating: true,
+        showListings: true,
+    },
+}) {
+    const {lang, setModalData, setModalShow} = useContext(AppContext);
+    const [loadedShop, setLoadedShop] = useState(shop);
+    const [isHovered, setIsHovered] = useState(false);
+    const {user} = usePage().props.auth;
 
     // Animation variants
     const containerVariants = {
-        hidden: { opacity: 0, scale: 0.95 },
+        hidden: {opacity: 0, scale: 0.95},
         visible: {
             opacity: 1,
             scale: 1,
             transition: {
                 duration: 0.4,
-                ease: "easeOut",
-                staggerChildren: 0.1
-            }
+                ease: 'easeOut',
+                staggerChildren: 0.1,
+            },
         },
         hover: {
             scale: 1.05,
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
             transition: {
                 duration: 0.2,
-                ease: "easeOut"
-            }
+                ease: 'easeOut',
+            },
         },
         exit: {
             opacity: 0,
             scale: 0.9,
             transition: {
                 duration: 0.3,
-                ease: "easeIn"
-            }
-        }
-    }
+                ease: 'easeIn',
+            },
+        },
+    };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 10 },
+        hidden: {opacity: 0, y: 10},
         visible: {
             opacity: 1,
             y: 0,
             transition: {
-                type: "spring",
+                type: 'spring',
                 stiffness: 200,
-                damping: 20
-            }
-        }
-    }
+                damping: 20,
+            },
+        },
+        hover: {
+            scale: 1.01,
+            transition: {
+                duration: 0.2,
+            },
+        },
+        exit: {
+            opacity: 0,
+        },
+    };
 
     const imageVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
+        hidden: {opacity: 0, scale: 0.8},
         visible: {
             opacity: 1,
             scale: 1,
             transition: {
                 duration: 0.4,
-                ease: "easeOut"
-            }
+                ease: 'easeOut',
+            },
         },
         hover: {
             scale: 1.1,
             transition: {
                 duration: 0.3,
-                ease: "easeOut"
-            }
-        }
-    }
+                ease: 'easeOut',
+            },
+        },
+    };
 
     const updateShop = (updatedItem) => {
-        setLoadedShop(updatedItem)
-    }
+        setLoadedShop(updatedItem);
+    };
 
     const contextOnClick = (action, e) => {
         switch (action) {
             case 'delete': {
                 setModalData({
-                    content: <ConfirmForm onSuccess={() => setLoadedShop(false)} action={'delete'} item={loadedShop}/>,
-                })
-                setModalShow(true)
-                break
+                    content: <ConfirmForm onSuccess={() => setLoadedShop(false)}
+                                          action={'delete'} item={loadedShop}/>,
+                });
+                setModalShow(true);
+                break;
             }
             case 'edit': {
-                router.visit(route('shop.single.edit', loadedShop.id))
-                break
+                router.visit(route('shop.single.edit', loadedShop.id));
+                break;
             }
             case 'disapprove':
             case 'approve': {
                 setModalData({
-                    content: <ConfirmForm onSuccess={updateShop} action={action} item={loadedShop}/>,
-                })
-                setModalShow(true)
-                break
+                    content: <ConfirmForm onSuccess={updateShop} action={action}
+                                          item={loadedShop}/>,
+                });
+                setModalShow(true);
+                break;
             }
             case 'report': {
-                setModalShow(true)
+                setModalShow(true);
                 setModalData({
-                    title: lang('Report'), content: <ReportForm h={loadedShop.h}/>,
-                })
-                break
+                    title: lang('Report'),
+                    content: <ReportForm h={loadedShop.h}/>,
+                });
+                break;
             }
             default:
-                console.log('Unknown context action:' + action)
+                console.log('Unknown context action:' + action);
         }
-    }
+    };
 
-    if (!loadedShop) return <AnimatePresence></AnimatePresence>
+    if (!loadedShop) return <AnimatePresence></AnimatePresence>;
 
     // Layout classes based on variant
     const getLayoutClasses = () => {
         switch (variant) {
             case 'wide':
-                return 'flex-row items-center'
+                return 'flex-row items-center';
             case 'tall':
-                return 'flex-col h-full'
+                return 'flex-col h-full';
             case 'square':
             default:
-                return 'flex-col'
+                return 'flex-col';
         }
-    }
+    };
 
     // Image container classes based on variant
     const getImageClasses = () => {
         switch (variant) {
             case 'wide':
-                return 'w-1/3 min-w-[100px] h-full max-h-[120px]'
+                return 'w-1/3 min-w-[100px] h-full max-h-[120px]';
             case 'tall':
-                return 'w-full h-2/3 max-h-[250px]'
+                return 'w-full h-2/3 max-h-[250px]';
             case 'square':
             default:
-                return 'w-full aspect-square'
+                return 'w-full aspect-square';
         }
-    }
+    };
 
     // Content container classes based on variant
     const getContentClasses = () => {
         switch (variant) {
             case 'wide':
-                return 'flex-1 p-3 pl-4'
+                return 'flex-1 p-3 pl-4';
             case 'tall':
-                return 'flex-1 p-3 pt-2'
+                return 'flex-1 p-3 pt-2';
             case 'square':
             default:
-                return 'p-3 pt-2'
+                return 'p-3 pt-2';
         }
-    }
+    };
 
     return (
         <AnimatePresence>
@@ -178,7 +192,7 @@ import {motion, AnimatePresence} from 'framer-motion'
             >
                 <motion.div
                     className={`
-                        bg-background rounded overflow-hidden
+                        group dark:bg-white/5 rounded overflow-hidden
                         flex ${getLayoutClasses()}
                         border border-transparent
                         ${!loadedShop.is_approved ? 'border-red-500/20' : ''}
@@ -218,7 +232,7 @@ import {motion, AnimatePresence} from 'framer-motion'
                                         <FontAwesomeIcon
                                             icon={faStore}
                                             className="text-sm opacity-40"
-                                            style={{filter: "drop-shadow(0 0 8px rgba(0,0,0,0.1))"}}
+                                            style={{filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.1))'}}
                                         />
                                     </motion.div>
                                 )}
@@ -226,9 +240,9 @@ import {motion, AnimatePresence} from 'framer-motion'
                                 {/* Overlay animation on hover */}
                                 <motion.div
                                     className="absolute inset-0 bg-primary-500/10 pointer-events-none"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: isHovered ? 1 : 0 }}
-                                    transition={{ duration: 0.2 }}
+                                    initial={{opacity: 0}}
+                                    animate={{opacity: isHovered ? 1 : 0}}
+                                    transition={{duration: 0.2}}
                                 />
                             </motion.div>
                         )}
@@ -248,7 +262,18 @@ import {motion, AnimatePresence} from 'framer-motion'
                                 </motion.h5>
                             )}
 
-                            <motion.div className="flex flex-col space-y-1" layout>
+                            {options.showShortDescription && (
+                                <motion.p
+                                    className="text-xs font-light line-clamp-2"
+                                    variants={itemVariants}
+                                    layout
+                                >
+                                    {loadedShop.description}
+                                </motion.p>
+                            )}
+
+                            <motion.div className="mt-2 flex justify-end items-center"
+                                        layout>
                                 {options.showLikes && (
                                     <motion.span
                                         className="text-xs gap-x-1 items-center justify-start flex"
@@ -256,6 +281,21 @@ import {motion, AnimatePresence} from 'framer-motion'
                                         layout
                                     >
                                         <LikeButton item={loadedShop}/>
+                                    </motion.span>
+                                )}
+
+                                {options.showRating && (
+                                    <motion.span
+                                        className="text-xs gap-x-1 items-center justify-start flex pr-5"
+                                        variants={itemVariants}
+                                        layout
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faStar}
+                                            className="opacity-70"
+                                        />
+                                        <span>{loadedShop.reviews?.average_rating ||
+                                            0}</span>
                                     </motion.span>
                                 )}
 
@@ -274,21 +314,18 @@ import {motion, AnimatePresence} from 'framer-motion'
                                 )}
                             </motion.div>
                         </motion.div>
+
                     </Link>
+                    <div
+                        className={'absolute right-5 top-5'}>
+                        <ContextMenu
+                            h={loadedShop.h}
+                            onClick={contextOnClick}
+                        />
+                    </div>
                 </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                >
-                    <ContextMenu
-                        className="!absolute top-2 right-2 w-30"
-                        h={loadedShop.h}
-                        onClick={contextOnClick}
-                    />
-                </motion.div>
             </motion.div>
         </AnimatePresence>
-    )
+    );
 }

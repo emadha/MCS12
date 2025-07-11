@@ -279,7 +279,7 @@ class ShopController extends Controller
             'title' => [
                 'required',
                 'min:4',
-                'max:20',
+                'max:50',
                 'unique:shops,title,' . $shop?->id,
             ],
             'description' => 'required|min:2|max:2000',

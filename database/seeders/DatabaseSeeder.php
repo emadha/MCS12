@@ -68,7 +68,7 @@ class DatabaseSeeder extends Seeder
         User::factory(2000)->create();
 
         dump('Creating Shops');
-        Shop::factory(200);
+        Shop::factory(200)->create();
 
         dump("Running ListingItemFactory");
         $listingItemFactory = ListingItem

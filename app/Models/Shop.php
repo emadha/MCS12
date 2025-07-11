@@ -76,6 +76,7 @@ class Shop extends Base
             'predefined_location',
             'is_open',
             'is_active',
+            'established_at',
         ];
 
     /**

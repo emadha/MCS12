@@ -1,13 +1,16 @@
-import PageContainer from "@/Layouts/PageContainer.jsx";
-import {useContext, useEffect, useState} from "react";
-import {AppContext} from "@/AppContext";
-import MainButton from "@/Components/Form/Buttons/MainButton";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import Hr from "@/Components/Hr.jsx";
-import Checkbox from "@/Components/Form/Checkbox.jsx";
-import Select from "@/Components/Form/Select.jsx";
-import TextInput from "@/Components/Form/TextInput.jsx";
-import ShopBlock from "@/Components/Shops/ShopBlock.jsx";
+import React, {useContext, useEffect, useState} from 'react';
+import {AppContext} from '@/AppContext';
+import MainButton from '@/Components/Form/Buttons/MainButton';
+import {faSearch} from '@fortawesome/free-solid-svg-icons';
+import Hr from '@/Components/Hr.jsx';
+import Checkbox from '@/Components/Form/Checkbox.jsx';
+import Select from '@/Components/Form/Select.jsx';
+import TextInput from '@/Components/Form/TextInput.jsx';
+import ShopBlock from '@/Components/Shops/ShopBlock.jsx';
+import {AnimatePresence, motion} from 'framer-motion';
+import Card from '@/Components/Card.jsx';
+import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton.jsx';
+import FlipWords from '@/Components/UI/flipwords.jsx';
 
 export default function Index({types, predefined_locations = []}) {
     const [shops, setShops] = useState([]);
@@ -16,7 +19,7 @@ export default function Index({types, predefined_locations = []}) {
         last_page: 1,
         per_page: 15,
         total: 0,
-        links: []
+        links: [],
     });
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({
@@ -36,16 +39,16 @@ export default function Index({types, predefined_locations = []}) {
         setTimeout(() => {
             window.scrollTo({
                 top: 0,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
-        }, 100)
+        }, 100);
     }, []);
 
     const fetchShops = async () => {
         setLoading(true);
         try {
             const response = await api.get(route('api.shops.index'), {
-                params: filters
+                params: filters,
             });
 
             setShops(response.data?.data ?? []);
@@ -55,7 +58,7 @@ export default function Index({types, predefined_locations = []}) {
                 last_page: response.data?.meta.last_page,
                 per_page: response.data?.meta.per_page,
                 total: response.data?.meta.total,
-                links: response.data?.meta.links
+                links: response.data?.meta.links,
             });
 
         } catch (error) {
@@ -65,16 +68,31 @@ export default function Index({types, predefined_locations = []}) {
         }
     };
 
-    return <PageContainer title={'Shops'}>
-        <div className="container mx-auto p-4">
+    return <>
+        <div className="container mt-32 mx-auto p-4">
             <>
+                <div
+                    className={'max-w-4xl my-20 mb-32 drop-shadow-[0_0px_100px_#fff] mx-auto text-center'}>
+                    <h1>Find Your Perfect
+                        <p className={'refined-gradient'}>
+                            <AnimatePresence mode="wait">
+                                <FlipWords words={['Shop', 'Showroom', 'Tuner', 'Rentals', 'Service Center']}/>
+                            </AnimatePresence>
+                        </p>
+                    </h1>
+                    <p className={'-mt-40'}>Connect with verified showrooms, expert tuners, luxury
+                        rentals, and premium service centers. Experience
+                        automotive excellence at every level.</p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     <TextInput
                         type="text"
                         placeholder="Shop Name"
                         defaultValue={filters.title}
-                        handleChange={(e) => setFilters({...filters, title: e.target.value})}
+                        handleChange={(e) => setFilters(
+                            {...filters, title: e.target.value})}
                     />
 
 
@@ -86,11 +104,13 @@ export default function Index({types, predefined_locations = []}) {
                             value: pL.id,
                         })) ?? []}
                         value={filters.predefined_location}
-                        onChange={(e) => setFilters({...filters, predefined_location: e.target.value})}
+                        onChange={(e) => setFilters(
+                            {...filters, predefined_location: e.target.value})}
                     >
                         <option value="">Select Predefined Location</option>
                         {predefined_locations?.data?.map((location) => (
-                            <option key={location.id} value={location.id}>{location.name}</option>
+                            <option key={location.id}
+                                    value={location.id}>{location.name}</option>
                         ))}
                     </Select>
                 </div>
@@ -106,12 +126,15 @@ export default function Index({types, predefined_locations = []}) {
                                     ...filters,
                                     type: e.target.checked
                                         ? filters.type
-                                            ? filters.type + ',' + type.id.toString()
+                                            ? filters.type + ',' +
+                                            type.id.toString()
                                             : type.id.toString()
-                                        : filters.type.split(',').filter(t => t !== type.id.toString()).join(',')
+                                        : filters.type.split(',').
+                                            filter(
+                                                t => t !== type.id.toString()).
+                                            join(','),
                                 })}
                             /></div>
-
 
                     ))}
                 </div>
@@ -128,17 +151,22 @@ export default function Index({types, predefined_locations = []}) {
 
             {
                 loading ? (
-                    <div className="flex justify-center items-center min-h-[50vh]">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                    <div
+                        className="flex justify-center items-center min-h-[50vh]">
+                        <div
+                            className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-20">
-                            {shops.map((shop) => <ShopBlock shop={shop} key={shop.id}/>)}
+                        <div
+                            className="grid grid-cols-1 md:grid-cols-3 gap-6 py-20">
+                            {shops.map((shop) => <ShopBlock variant={'wide'} shop={shop}
+                                                            key={shop.id}/>)}
                         </div>
 
                         <Hr className={'my-20'}/>
-                        <div className="flex items-center justify-center gap-2 mt-6">
+                        <div
+                            className="flex items-center justify-center gap-2 mt-6">
                             {pagination.links.map((link, index) => (
                                 <button
                                     key={index}
@@ -146,13 +174,15 @@ export default function Index({types, predefined_locations = []}) {
                                         link.active
                                             ? 'bg-primary text-white'
                                             : 'bg-background hover:bg-gray-300 dark:hover:bg-neutral-700'
-                                    } ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    } ${!link.url
+                                        ? 'opacity-50 cursor-not-allowed'
+                                        : ''}`}
                                     onClick={() => {
                                         if (link.url) {
                                             setFilters(prev => ({
                                                 ...prev,
-                                                page: link.label
-                                            }))
+                                                page: link.label,
+                                            }));
                                         }
                                     }}
                                     disabled={!link.url}
@@ -163,6 +193,20 @@ export default function Index({types, predefined_locations = []}) {
                     </>
                 )
             }
+            <Hr className={'my-14 max-w-xs mx-auto'}/>
+            <div>
+                <Card
+                    className={'max-w-md mx-auto'} header={
+                    <h2 className={'font-black'}>
+                        Ready To Get Started?</h2>
+                }>
+                    <p>Join thousands of satisfied customers who trust our
+                        premium automotive partners</p>
+                    <div className={'my-10 flex items-center justify-center'}>
+                        <PrimaryButton>Create a Shop</PrimaryButton>
+                    </div>
+                </Card>
+            </div>
         </div>
-    </PageContainer>
+    </>;
 }

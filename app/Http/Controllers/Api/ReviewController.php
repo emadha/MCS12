@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Review\ReviewSimpleResource;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,12 +48,8 @@ class ReviewController extends Controller
             ->get();
 
         // Calculate average rating
-        $averageRating = $reviews->avg('rating') ?: 0;
 
-        return response()->json([
-            'reviews' => $reviews,
-            'average_rating' => $averageRating,
-            'total_reviews' => $reviews->count(),
-        ]);
+
+        return response()->json(new ReviewSimpleResource($reviews));
     }
 }

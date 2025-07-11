@@ -44,7 +44,7 @@ class PhotoController extends Controller
         $filename = $request->file('p')->getClientOriginalName();
         $extension = 'webp';//$request->file('p')->guessClientExtension()
 
-        $filename = md5($filename.rand()).'.'.$extension;
+        $filename = md5($filename . rand()) . '.' . $extension;
 
         try {
             $interventionImage = ImageManager::gd()->read($request->file('p'));
@@ -56,21 +56,22 @@ class PhotoController extends Controller
 
             if ($fileStored) {
                 return response([
-                    'status'       => 1,
-                    'message'      => 'Photo has been uploaded',
-                    'photo'        => encrypt($fileStored->id),
+                    'status' => 1,
+                    'message' => 'Photo has been uploaded',
+                    'photo' => encrypt($fileStored->id),
                     'photo_object' => $photoObject,
                 ], ResponseSymphony::HTTP_OK);
             } else {
                 return response([
-                    'status'  => -1,
+                    'status' => -1,
                     'message' => 'Error uploading photo',
                 ], ResponseSymphony::HTTP_BAD_REQUEST);
             }
-        } catch (Exception|DecoderException) {
+        } catch (Exception|DecoderException $exception) {
             return response([
-                'status'  => -1,
-                'message' => 'Error #'.__LINE__,
+                'status' => -1,
+                'message' => 'Error #' . __LINE__,
+                'error' => $exception->getMessage()
             ], ResponseSymphony::HTTP_BAD_REQUEST);
         }
     }
@@ -83,30 +84,31 @@ class PhotoController extends Controller
      */
     public function action_delete(
         Request $request,
-        Photo $photo
-    ): \Illuminate\Foundation\Application|Response|Application|ResponseFactory {
+        Photo   $photo
+    ): \Illuminate\Foundation\Application|Response|Application|ResponseFactory
+    {
         if ($photo->item_type === 'App\Models\ListingItem' && $photo->item->photos()->count() <= 3) {
             return response([
-                'status'  => -1,
+                'status' => -1,
                 'message' => 'You cannot delete this photo, an item must have at least 3 photos.',
             ], ResponseAlias::HTTP_BAD_REQUEST);
         }
 
         if (!$request->user()->can('delete', $photo)) {
             return response([
-                'status'  => -1,
+                'status' => -1,
                 'message' => __('Unauthorized'),
             ], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         if ($photo->delete()) {
             return response([
-                'status'  => 1,
+                'status' => 1,
                 'message' => __('frontend.Item Deleted'),
             ]);
         } else {
             return response([
-                'status'  => 0,
+                'status' => 0,
                 'message' => __('frontend.Failed'),
             ]);
         }
@@ -127,13 +129,13 @@ class PhotoController extends Controller
 
         if ($photo->setPrimary()) {
             return response([
-                'status'  => 1,
+                'status' => 1,
                 'message' => __('frontend.This is the primary photo now'),
             ]);
         }
 
         return response([
-            'status'  => 0,
+            'status' => 0,
             'message' => __('frontend.Failed'),
         ]);
     }
@@ -153,22 +155,22 @@ class PhotoController extends Controller
 
         if ($photo->published) {
             return response([
-                'status'      => -1,
-                'message'     => __('frontend.Item already published'),
+                'status' => -1,
+                'message' => __('frontend.Item already published'),
                 'updatedItem' => new PhotoResource($photo),
             ], ResponseAlias::HTTP_OK);
         }
 
         if ($photo->publish()) {
             return response([
-                'status'      => 1,
-                'message'     => __('frontend.Item published'),
+                'status' => 1,
+                'message' => __('frontend.Item published'),
                 'updatedItem' => new PhotoResource($photo),
             ]);
         }
 
         return response([
-            'status'  => 0,
+            'status' => 0,
             'message' => __('frontend.Failed'),
         ]);
     }
@@ -188,22 +190,22 @@ class PhotoController extends Controller
 
         if (!$photo->published) {
             return response([
-                'status'      => -1,
-                'message'     => __('frontend.Item already Unpublished'),
+                'status' => -1,
+                'message' => __('frontend.Item already Unpublished'),
                 'updatedItem' => new PhotoResource($photo),
             ], ResponseAlias::HTTP_OK);
         }
 
         if ($photo->unpublish()) {
             return response([
-                'status'      => 1,
-                'message'     => __('frontend.Item Unpublished'),
+                'status' => 1,
+                'message' => __('frontend.Item Unpublished'),
                 'updatedItem' => new PhotoResource($photo),
             ]);
         }
 
         return response([
-            'status'  => 0,
+            'status' => 0,
             'message' => __('frontend.Failed'),
         ]);
     }
