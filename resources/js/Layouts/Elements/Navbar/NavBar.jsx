@@ -47,7 +47,7 @@ export default function NavBar({className}) {
         return () => window.removeEventListener('scroll', _scroll);
     });
     return <div
-        className={'fixed top-0 z-[10000] left-0 w-full duration-500 ' +
+        className={'fixed top-0 z-[1000] left-0 w-full duration-500 ' +
             navbarYPadding + (className ? ' ' + className : '')}>
         <nav className="container px-5">
             <div className="flex items-stretch justify-between">

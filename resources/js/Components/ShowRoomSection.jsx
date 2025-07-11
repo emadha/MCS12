@@ -4,6 +4,7 @@ import ShopBlock from '@/Components/Shops/ShopBlock.jsx';
 import SecondaryButton from '@/Components/SecondaryButton.jsx';
 import {AppContext} from '@/AppContext.js';
 import Loading from '@/Components/Loading.jsx';
+import PaginationCarousel from '@/Components/PaginationCarousel.jsx';
 
 function ShowRoomSection({showrooms, promotedShowrooms, loadingShowrooms}) {
     const {lang, auth} = useContext(AppContext);
@@ -22,9 +23,15 @@ function ShowRoomSection({showrooms, promotedShowrooms, loadingShowrooms}) {
 
                     {promotedShowrooms.map(promotedShowroom => <ShopBlock shop={promotedShowroom}/>)}
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {showrooms.map(showroom => <ShopBlock shop={showroom} variant={'wide'}/>)}
-                    </div>
+                    <PaginationCarousel
+                        items={showrooms}
+                        itemsPerPage={3}
+                        renderItem={(showroom) => <ShopBlock shop={showroom} variant={'wide'}/>}
+                        className="my-6"
+                        showDots={true}
+                        autoplay={true}
+                        autoplaySpeed={7000}
+                    />
 
                 </>
             }

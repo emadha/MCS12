@@ -27,6 +27,7 @@ class ApiController extends Controller
         $Shops = Shop::type([ShopType::TYPE_SHOWROOM])
             ->active()
             ->whereNotIn('id', $promotedShops->pluck('id'))
+            ->limit(6)
             ->get();
 
         return [

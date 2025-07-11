@@ -1,40 +1,39 @@
-import {useContext, useEffect, useState} from 'react'
-import ListingItemCarBlock from '@/Components/Listing/ListingItemCarBlock'
-import {Skeleton} from 'antd'
-import {AppContext} from '@/AppContext'
-import {ListingContext} from '@/Context/ListingContext'
-import CarSearch from '@/Components/CarSearch/CarSearch'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faAd, faAlignLeft, faFilterCircleXmark, faMultiply, faSpinner} from '@fortawesome/free-solid-svg-icons'
-import {Link} from '@inertiajs/react'
-import {Transition} from '@headlessui/react'
-import Hr from '@/Components/Hr'
-import ListingsTopBar from '@/Components/Listing/Components/ListingsTopBar'
-import SortMenu from '@/Components/Listing/Components/SortMenu'
-import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton'
-import toast from 'react-hot-toast'
-import {isArray} from 'lodash'
-import SkeletonListingBlockItem from '@/Components/SkeletonListingBlockItem'
+import {useContext, useEffect, useState} from 'react';
+import ListingItemCarBlock from '@/Components/Listing/ListingItemCarBlock';
+import {Skeleton} from 'antd';
+import {AppContext} from '@/AppContext';
+import {ListingContext} from '@/Context/ListingContext';
+import CarSearch from '@/Components/CarSearch/CarSearch';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faAd, faAlignLeft, faFilterCircleXmark, faMultiply, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {Link} from '@inertiajs/react';
+import Hr from '@/Components/Hr';
+import ListingsTopBar from '@/Components/Listing/Components/ListingsTopBar';
+import SortMenu from '@/Components/Listing/Components/SortMenu';
+import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton';
+import toast from 'react-hot-toast';
+import {isArray} from 'lodash';
+import SkeletonListingBlockItem from '@/Components/SkeletonListingBlockItem';
 
-export default function ListingContainer ({ className, type = 'cars', presetCriteria = {} }) {
+export default function ListingContainer({className, type = 'cars', presetCriteria = {}}) {
 
     const {
         settings, lang, automaticSize, setAutomaticSize, setHasSidebar, setIsSidebarOpen, isSidebarOpen, getPrefs, userPrefs,
-    } = useContext(AppContext)
+    } = useContext(AppContext);
 
-    const [showListingTopBar, setShowListingTopBar] = useState(false)
-    const [showSidebar, setShowSidebar] = useState(false)
+    const [showListingTopBar, setShowListingTopBar] = useState(false);
+    const [showSidebar, setShowSidebar] = useState(false);
 
-    const urlQuery = new URLSearchParams(window.location.search)
+    const urlQuery = new URLSearchParams(window.location.search);
 
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    const [sorting, setSorting] = useState(urlQuery.get('o') ?? 'latest')
+    const [sorting, setSorting] = useState(urlQuery.get('o') ?? 'latest');
 
-    const [itemsView, setItemsView] = useState(getPrefs('listItemView') || 'list')
-    const [items, setItems] = useState([])
-    const [promotedItems, setPromotedItems] = useState([])
-    const [itemsMeta, setItemsMeta] = useState([])
+    const [itemsView, setItemsView] = useState(getPrefs('listItemView') || 'list');
+    const [items, setItems] = useState([]);
+    const [promotedItems, setPromotedItems] = useState([]);
+    const [itemsMeta, setItemsMeta] = useState([]);
 
     const [searchDefaultFields, setSearchDefaultFields] = useState({
         location: urlQuery.has('location') ? urlQuery.get('location').split(',') ?? [] : [],
@@ -55,70 +54,70 @@ export default function ListingContainer ({ className, type = 'cars', presetCrit
         mt: urlQuery.get('mt') || '',
         o: urlQuery.get('o') || '',
         page: urlQuery.get('page') || '',
-    })
+    });
 
-    const [criteria, setCriteria] = useState({ ...searchDefaultFields })
-
-    useEffect(e => {
-        setItemsView(getPrefs('listItemView') || 'list')
-    }, [userPrefs])
+    const [criteria, setCriteria] = useState({...searchDefaultFields});
 
     useEffect(e => {
-        updateResults()
-    }, [criteria])
+        setItemsView(getPrefs('listItemView') || 'list');
+    }, [userPrefs]);
+
+    useEffect(e => {
+        updateResults();
+    }, [criteria]);
 
     useEffect(e => {
         // Set the default values from url first
-        setHasSidebar(true)
-        setShowListingTopBar(true)
-        setShowSidebar(true)
-    }, [])
+        setHasSidebar(true);
+        setShowListingTopBar(true);
+        setShowSidebar(true);
+    }, []);
 
     const renderListingItem = (item, view = itemsView) => {
         switch (item?.type) {
             case 'car':
-                return <ListingItemCarBlock key={'listingItem_' + item.id + item.sold_at} itemsView={view} sidebarOpen={isSidebarOpen} item={item}/>
+                return <ListingItemCarBlock key={'listingItem_' + item.id + item.sold_at} itemsView={view} sidebarOpen={isSidebarOpen} item={item}/>;
             default:
-                return <div></div>
+                return <div></div>;
         }
-    }
+    };
 
     const updateResults = () => {
 
-        let params = new URLSearchParams(criteria)
+        let params = new URLSearchParams(criteria);
 
         let filteredCriteria = Object.entries(criteria).filter(e => {
-            return (isArray(e[1]) && e[1].length) || (!isArray(e[1]) && e[1] !== '')
-        })
+            return (isArray(e[1]) && e[1].length) || (!isArray(e[1]) && e[1] !== '');
+        });
 
         if (filteredCriteria.length) {
-            let url = new URLSearchParams(filteredCriteria.values())
-            window.history.pushState(this, null, '/?' + url.toString())
+            let url = new URLSearchParams(filteredCriteria.values());
+            window.history.pushState(this, null, '/?' + url.toString());
         }
 
-        setIsLoaded(false)
+        setIsLoaded(false);
         axios.post('/', params).then(res => {
-            setItems(res.data.data)
-            setPromotedItems(res.data.promoted)
-            setItemsMeta(res.data.meta)
+            setItems(res.data.data);
+            setPromotedItems(res.data.promoted);
+            setItemsMeta(res.data.meta);
 
         }).catch(err => {
-            toast.error(lang('Error'), { className: 'toast-error', position: 'bottom-center' })
+            toast.error(lang('Error'), {className: 'toast-error', position: 'bottom-center'});
 
         }).finally(fin => {
-            setIsLoaded(true)
+            setIsLoaded(true);
 
-        })
+        });
 
-    }
+    };
 
     const removeListingItem = (itemID) => {
-        setItems((prevState) => prevState.filter(_item => _item.id !== itemID))
-    }
+        setItems((prevState) => prevState.filter(_item => _item.id !== itemID));
+    };
 
     const updateListingItem = (updatedItem) => {
-        setItems(() => [...items.map(i => i.id == updatedItem?.id ? updatedItem : i)])
-    }
+        setItems(() => [...items.map(i => i.id == updatedItem?.id ? updatedItem : i)]);
+    };
 
     /** Context Related Functions **/
     const listingProvider = {
@@ -139,10 +138,10 @@ export default function ListingContainer ({ className, type = 'cars', presetCrit
         sorting: sorting,
         setSorting: setSorting,
         updateResults: updateResults,
-    }
+    };
 
     return <div className={''} id={'listingBlock'}>
-        <ListingContext.Provider value={{ ...listingProvider }}>
+        <ListingContext.Provider value={{...listingProvider}}>
             <div className={'container'}>
                 <div className={'pt-6 flex listing-items ' + (className ? ' ' + className : '')}>
                     <div
@@ -150,10 +149,10 @@ export default function ListingContainer ({ className, type = 'cars', presetCrit
                             (isSidebarOpen ? ' w-full md:w-6/12 lg:w-4/12 xl:w-4/12 sm:w-8/12' : ' !w-0 overflow-hidden')}>
 
                         <div
-                            className={'lg:sticky fixed top-12 ml-2 bg-white bg-grad-primary rounded text-sm w-full transition-all h-screen max-h-[calc(100vh-60px)] ' +
-                                'sm:max-h-[calc(100vh-45px)] shadow-sm dark:shadow-xl sm:px-5 md:px-2 px-1 lg:py-5 py-7  sm:pb-5 pb-16 ' +
+                            className={'lg:sticky fixed top-24 ml-2 bg-white bg-grad-primary rounded text-sm w-full transition-all h-screen max-h-[calc(100vh-60px)] ' +
+                                'sm:max-h-[calc(100vh-45px)] shadow-sm dark:shadow-xl sm:px-5 md:px-2 px-1 lg:py-0 py-7  sm:pb-5 pb-16 ' +
                                 (isSidebarOpen ? 'overflow-auto' : 'hidden !h-0 overflow-hidden')}
-                            style={{ scrollbarWidth: 'thin' }}>
+                            style={{scrollbarWidth: 'thin'}}>
 
                             <PrimaryButton hideTextOnSmallScreen={false}
                                            onClick={() => setIsSidebarOpen(false)}
@@ -164,31 +163,21 @@ export default function ListingContainer ({ className, type = 'cars', presetCrit
                     </div>
 
                     <div className={'dark:text-neutral-200 ' + (isSidebarOpen ? ' md:w-6/12 lg:w-8/12 xl:pl-5 xl:w-8/12' : ' !w-full ')}>
+                        <div className={'sticky z-[12000] top-16 text-xs bg-white shadow-sm bg-grad-primary-inverse px-5 mx-2 py-4 pb-4 justify-between items-center flex'}>
 
-                        <Transition show={showListingTopBar}
-                                    className={'sticky z-[12] top-12'}
-                                    enter={'duration-1000'}
-                                    enterFrom={'mt-40 opacity-0'}
-                                    enterTo={'mt-0 opacity-100'}
-                                    leave={'duration-1000'}
-                                    leaveFrom={'mt-0 opacity-100'}
-                                    leaveTo={'mt-40 opacity-0'}>
-                            <div className={'text-xs bg-white shadow-sm bg-grad-primary-inverse px-5 mx-2 py-4 pb-4 justify-between items-center flex'}>
+                            <ListingsTopBar className={(isSidebarOpen ? 'bg-neutral-900 text-white' : '') + ' animate-pop-in-lg'}
+                                            icon={faAlignLeft} text={lang(isSidebarOpen ? 'Close Search' : 'Open Search')}
+                                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}/>
+                            {isLoaded ?
+                                <div className={'dark:text-neutral-600 text-neutral-400'}>
+                                    {itemsMeta?.total ? itemsMeta.total + ' ' + lang('item(s) found') : lang('No Items Found')}
+                                </div>
+                                : <div className={'animate-pulse'}><FontAwesomeIcon className={'mx-1'} icon={faSpinner} spin={true}/><span className={'animate-pulse'}>{lang(
+                                    'Searching...')}</span></div>}
 
-                                <ListingsTopBar className={(isSidebarOpen ? 'bg-neutral-900 text-white' : '') + ' animate-pop-in-lg'}
-                                                icon={faAlignLeft} text={lang(isSidebarOpen ? 'Close Search' : 'Open Search')}
-                                                onClick={() => setIsSidebarOpen(!isSidebarOpen)}/>
-                                {isLoaded ?
-                                    <div className={'dark:text-neutral-600 text-neutral-400'}>
-                                        {itemsMeta?.total ? itemsMeta.total + ' ' + lang('item(s) found') : lang('No Items Found')}
-                                    </div>
-                                    : <div className={'animate-pulse'}><FontAwesomeIcon className={'mx-1'} icon={faSpinner} spin={true}/><span className={'animate-pulse'}>{lang(
-                                        'Searching...')}</span></div>}
+                            <SortMenu/>
 
-                                <SortMenu/>
-
-                            </div>
-                        </Transition>
+                        </div>
 
                         <div className={'w-full flex flex-wrap'}>
                             {promotedItems?.length ? <div className={'flex flex-wrap items-center px-5 xl:px-0 my-10 justify-center w-full'}>
@@ -247,21 +236,21 @@ export default function ListingContainer ({ className, type = 'cars', presetCrit
                                         ' disabled:!bg-transparent disabled:opacity-10')}
                                 onClick={e => {
                                     if (!link?.url) {
-                                        return false
+                                        return false;
                                     }
-                                    setIsLoaded(false)
+                                    setIsLoaded(false);
                                     axios.post(link.url).then(res => {
-                                        setItems(res.data.data)
-                                        setItemsMeta(res.data.meta)
+                                        setItems(res.data.data);
+                                        setItemsMeta(res.data.meta);
                                     }).catch(err => {
                                     }).finally(() => {
-                                        setIsLoaded(true)
-                                    })
-                                    document.getElementById('listingBlock').length && document.getElementById('listingBlock').scrollIntoView()
-                                    window.history.pushState(this, null, link.url)
-                                    e.preventDefault()
+                                        setIsLoaded(true);
+                                    });
+                                    document.getElementById('listingBlock').length && document.getElementById('listingBlock').scrollIntoView();
+                                    window.history.pushState(this, null, link.url);
+                                    e.preventDefault();
                                 }}
-                                dangerouslySetInnerHTML={{ __html: lang(link.label) }}/>)}
+                                dangerouslySetInnerHTML={{__html: lang(link.label)}}/>)}
                             <div className={'mx-auto p-10 text-xs text-center dark:text-neutral-600 text-neutral-400'}>
                                 {lang('Found a total of ')} {itemsMeta?.total} {lang('item(s)')}
                             </div>
@@ -272,5 +261,5 @@ export default function ListingContainer ({ className, type = 'cars', presetCrit
             </div>
         </ListingContext.Provider>
 
-    </div>
+    </div>;
 }
