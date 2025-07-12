@@ -6,6 +6,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
     faAt,
     faCircleCheck,
+    faCalendarDays,
+    faClock,
+    faCalendarAlt,
     faExclamationCircle,
     faGlobe,
     faImage,
@@ -22,7 +25,7 @@ import {AppContext} from '@/AppContext'
 import {faCheckCircle, faCircle} from '@fortawesome/free-regular-svg-icons'
 import {parseInt} from 'lodash'
 import Alert from '@/Components/Alerts/Alert'
-import {Checkbox} from 'antd'
+import {Checkbox, TimePicker, DatePicker} from 'antd'
 import Hr from '@/Components/Hr'
 import PageContainer from '@/Layouts/PageContainer'
 import SecondaryButton from '@/Components/Form/Buttons/SecondaryButton'
@@ -31,6 +34,7 @@ import Contacts from '@/Components/Contacts'
 import LeafletMapComponent from '@/Components/LeafletMapComponent'
 import MainButton from '@/Components/Form/Buttons/MainButton'
 import {clsx} from "clsx";
+import dayjs from 'dayjs';
 
 let usernameCheckTimeOut = null
 export default function Form({
@@ -66,6 +70,10 @@ export default function Form({
         profile_photo: null,
         contacts: shop.data.contacts ?? [],
         predefined_location: {id: shop?.data.predefined_location ?? '', name: ''},
+        opening_hour: shop?.data.opening_hour ?? '09:00',
+        closing_hour: shop?.data.closing_hour ?? '18:00',
+        opening_days: shop?.data.opening_days ?? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        established_at: shop?.data.established_at ?? ''
     })
 
     const [geoLocation, setGeoLocation] = useState({})
@@ -223,6 +231,9 @@ export default function Form({
         </Alert> : <></>}
 
         <form className={''} onSubmit={submit}>
+            {/* Shop Profile Photo Section */}
+            <h3 className="text-lg font-medium text-center mb-2">Shop Profile Photo</h3>
+            <p className="text-xs text-center mb-4">Upload a clear, professional image that represents your shop. This will be displayed on your shop profile.</p>
             <Field>
                 <div className={'group flex justify-center h-72 items-center relative rounded-xl overflow-hidden'}>
 
@@ -260,6 +271,8 @@ export default function Form({
 
             <div className={'flex flex-wrap'}>
                 <div className={'w-full lg:w-1/2'}>
+                    {/* Basic Info Section */}
+                    <h3 className="text-lg font-medium mb-4">Basic Information</h3>
                     <Field title={lang('Shop Title')} className={'my-5'}>
                         <InputError message={errors.title} className="mt-2"/>
                         <p className={'text-xs mb-2'}>Choose a clear and descriptive title for your shop that customers
@@ -272,6 +285,36 @@ export default function Form({
                             placeholder={lang('Title')}
                             handleChange={onHandleChange}/>
                     </Field>
+                    <Field title={lang('Shop Type')} className={'text-left rtl:text-right py-2'}>
+                        <InputError message={errors.types} className={'mt-2'}/>
+                        <p className={'text-xs mb-2'}>Choose type(s) that suits your shop. This helps customers find the specific services they need.</p>
+                        <div className={'flex flex-wrap'}>
+                            {Object.values(data.types).map(type => {
+                                const IconComponent = ShopTypeIcons[type.id];
+                                return (
+                                    <Checkbox disabled={processing}
+                                              key={type.id}
+                                              name={'type'}
+                                              checked={shopTypes.find(t => t.id === type.id)?.checked || false}
+                                              value={type.id}
+                                              onChange={e => {
+                                                  const updatedTypes = shopTypes.map(t => ({
+                                                      ...t,
+                                                      checked: t.id === parseInt(e.target.value) ? e.target.checked : t.checked
+                                                  }));
+                                                  setShopTypes(updatedTypes);
+                                                  setData('types', updatedTypes);
+                                              }}
+                                              className={'w-full mx-auto sm:w-1/2 md:w-1/3'}
+                                    >
+                                        {IconComponent && <IconComponent className="w-5 h-5 inline-block mr-2" />}
+                                        {lang(type.title)}
+                                    </Checkbox>
+                                );
+                            })}
+                        </div>
+                    </Field>
+
                     <Field title={lang('Username')} className={'my-5'}>
                         <InputError message={errors.username} className="mt-2"/>
                         <p className={'text-xs mb-2'}>Create a unique username for your shop URL. Use only letters,
@@ -337,38 +380,92 @@ export default function Form({
 
                     <Hr/>
 
-                    <Field title={lang('Shop type')} className={'text-left rtl:text-right py-2'}>
-                        <InputError message={errors.types} className={'mt-2'}/>
-                        <small>{lang('Choose type(s) that suits your shop.')}</small>
-                        <div className={'flex flex-wrap'}>
-                            {Object.values(data.types).map(type => {
-                                const IconComponent = ShopTypeIcons[type.id];
-                                return (
-                                    <Checkbox disabled={processing}
-                                              key={type.id}
-                                              name={'type'}
-                                              checked={shopTypes.find(t => t.id === type.id)?.checked || false}
-                                              value={type.id}
-                                              onChange={e => {
-                                                  const updatedTypes = shopTypes.map(t => ({
-                                                      ...t,
-                                                      checked: t.id === parseInt(e.target.value) ? e.target.checked : t.checked
-                                                  }));
-                                                  setShopTypes(updatedTypes);
-                                                  setData('types', updatedTypes);
-                                              }}
-                                              className={'w-full mx-auto sm:w-1/2 md:w-1/3'}
-                                    >
-                                        {IconComponent && <IconComponent className="w-5 h-5 inline-block mr-2" />}
-                                        {lang(type.title)}
-                                    </Checkbox>
-                                );
-                            })}
+                    {/* Hours of Operation Section */}
+                    <h3 className="text-lg font-medium mt-8 mb-4">Hours of Operation</h3>
+                    <Field title={lang('Opening Hours')} className={'my-5'}>
+                        <InputError message={errors.opening_hour || errors.closing_hour} className="mt-2"/>
+                        <p className={'text-xs mb-2'}>Set your shop's regular business hours. This helps customers know when they can visit your shop.</p>
+                        <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm">Opening Time</label>
+                                <TimePicker
+                                    className="w-32"
+                                    disabled={processing}
+                                    format="HH:mm"
+                                    value={data.opening_hour ? dayjs(data.opening_hour, 'HH:mm') : null}
+                                    onChange={(time) => {
+                                        setData('opening_hour', time ? time.format('HH:mm') : '09:00')
+                                        clearErrors('opening_hour')
+                                    }}
+                                    placeholder="Opening time"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm">Closing Time</label>
+                                <TimePicker
+                                    className="w-32"
+                                    disabled={processing}
+                                    format="HH:mm"
+                                    value={data.closing_hour ? dayjs(data.closing_hour, 'HH:mm') : null}
+                                    onChange={(time) => {
+                                        setData('closing_hour', time ? time.format('HH:mm') : '18:00')
+                                        clearErrors('closing_hour')
+                                    }}
+                                    placeholder="Closing time"
+                                />
+                            </div>
                         </div>
                     </Field>
+
+                    <Field title={lang('Opening Days')} className={'my-5'}>
+                        <InputError message={errors.opening_days} className="mt-2"/>
+                        <p className={'text-xs mb-2'}>Select the days your shop is open for business.</p>
+                        <div className="flex flex-wrap gap-2">
+                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                                <Checkbox
+                                    key={day}
+                                    disabled={processing}
+                                    checked={data.opening_days.includes(day)}
+                                    onChange={e => {
+                                        const isChecked = e.target.checked
+                                        const updatedDays = isChecked
+                                            ? [...data.opening_days, day]
+                                            : data.opening_days.filter(d => d !== day)
+
+                                        setData('opening_days', updatedDays)
+                                        clearErrors('opening_days')
+                                    }}
+                                >
+                                    {day}
+                                </Checkbox>
+                            ))}
+                        </div>
+                    </Field>
+
+                    {/* Location Section */}
+                    <h3 className="text-lg font-medium mt-8 mb-4">Location & History</h3>
+
+                    <Field title={lang('Established Date')} className={'my-5'}>
+                        <InputError message={errors.established_at} className="mt-2"/>
+                        <p className={'text-xs mb-2'}>When was your shop established? This helps build credibility with customers.</p>
+                        <DatePicker
+                            className="w-full"
+                            disabled={processing}
+                            value={data.established_at ? dayjs(data.established_at) : null}
+                            onChange={(date) => {
+                                setData('established_at', date ? date.format('YYYY-MM-DD') : '')
+                                clearErrors('established_at')
+                            }}
+                            placeholder="Select establishment date"
+                        />
+                    </Field>
+
                     <Hr/>
                 </div>
                 <div className={'w-full lg:w-1/2 lg:px-10 px-0'}>
+                    {/* Map & Location Section */}
+                    <h3 className="text-lg font-medium mb-4">Map Location</h3>
+                    <p className="text-xs mb-4">Pin your shop's exact location on the map. This helps customers find your physical location.</p>
                     <Field title={lang('Map')} className={'w-full'}>
                         <LeafletMapComponent
                             handleOnClick={e => setSelectedLocation(e)}
@@ -378,7 +475,11 @@ export default function Form({
                             setLoadingGeoLocation={setLoadingGeoLocation}/>
                     </Field>
                     <Hr/>
-                    <Field className={''} title={lang('Contact')}>
+
+                    {/* Contact Methods Section */}
+                    <h3 className="text-lg font-medium mt-8 mb-4">Contact Information</h3>
+                    <p className="text-xs mb-4">Add ways for customers to contact your shop. Include social media, phone numbers, and other contact methods.</p>
+                    <Field className={''} title={lang('Contact Methods')}>
                         <InputError message={errors.contacts} className="mt-2"/>
 
                         <i>{lang('Select type of contact')}</i>
@@ -386,6 +487,29 @@ export default function Form({
                                   rootSelectedContactMethods={data.contacts}
                                   rootSetSelectedContactMethods={setContacts}/>
                     </Field>
+                </div>
+            </div>
+
+            {/* Form Summary Section */}
+            <div className="w-full max-w-4xl mx-auto mt-16 mb-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg shadow-sm">
+                <h3 className="text-lg font-medium mb-4 text-center">Ready to {shop?.data.id ? 'Update' : 'Create'} Your Shop?</h3>
+                <p className="text-sm text-center mb-6">Please review all information before submitting. Make sure your contact details and location are accurate.</p>
+
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <div className="text-center">
+                        <span className="block text-sm font-medium mb-1">Shop Type</span>
+                        <span className="text-xs">{shopTypes.filter(t => t.checked).length} type(s) selected</span>
+                    </div>
+
+                    <div className="text-center">
+                        <span className="block text-sm font-medium mb-1">Contact Methods</span>
+                        <span className="text-xs">{contacts.filter(c => c && c.value).length} contact(s) added</span>
+                    </div>
+
+                    <div className="text-center">
+                        <span className="block text-sm font-medium mb-1">Opening Days</span>
+                        <span className="text-xs">{data.opening_days.length} day(s) selected</span>
+                    </div>
                 </div>
             </div>
 

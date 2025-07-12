@@ -35,20 +35,20 @@ class DatabaseSeeder extends Seeder
         // Create Super Admin
         dump('Creating User');
         $AdminUser = User::create([
-            'first_name'        => 'Emad',
-            'last_name'         => 'H.',
-            'email'             => 'emad.haa@gmail.com',
+            'first_name' => 'Emad',
+            'last_name' => 'H.',
+            'email' => 'emad.haa@gmail.com',
             'email_verified_at' => now(),
-            'password'          => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token'    => Str::random(10),
-            'created_at'        => Carbon::now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => Str::random(10),
+            'created_at' => Carbon::now(),
         ])->assignRole(Role::where('name', 'Super Admin')->first());
 
         dump('Generating coupons');
         Artisan::call('mcs:make-coupons --num=100');
 
         $creditsCount = 10000;
-        dump('Giving '.$creditsCount.' to user '.$AdminUser->email);
+        dump('Giving ' . $creditsCount . ' to user ' . $AdminUser->email);
 
         dump('Giving admin privileges to user id 1');
         Artisan::call('mcs:admin:make 1');
@@ -68,7 +68,12 @@ class DatabaseSeeder extends Seeder
         User::factory(2000)->create();
 
         dump('Creating Shops');
-        Shop::factory(200)->create();
+        $Shops = Shop::factory(200)->create();
+
+        dump('Syncing Shop Types');
+        $Shops->each(function (Shop $shop) use ($ids) {
+            $shop->types()->sync(rand(1, 11));
+        });
 
         dump("Running ListingItemFactory");
         $listingItemFactory = ListingItem
@@ -78,11 +83,11 @@ class DatabaseSeeder extends Seeder
                     $i->StoreImageFromRemote($ids);
                 })
             )
-            ->has(Contact::factory(rand(1,4)))
+            ->has(Contact::factory(rand(1, 4)))
             ->create();
 
         $listingItemFactory->each(function (ListingItem $listingItem) {
-            dump("Adding Listing Item Car to Listing Item:".$listingItem->id);
+            dump("Adding Listing Item Car to Listing Item:" . $listingItem->id);
             $listItemCar = ListingItemsCar::factory()->create();
             $listingItem->item_type = ListingItemsCar::class;
             $listingItem->item_id = $listItemCar->id;
@@ -104,11 +109,11 @@ class DatabaseSeeder extends Seeder
         dump('Creating random promotions');
         ListingItem::limit(7)->inRandomOrder()->get()->each(function ($listingItem) {
             $listingItem->promotions()->create([
-                'user_id'    => 1,
-                'item_type'  => get_class($listingItem),
-                'item_id'    => $listingItem->id,
+                'user_id' => 1,
+                'item_type' => get_class($listingItem),
+                'item_id' => $listingItem->id,
                 'expires_at' => Carbon::now()->addDays(30),
-                'is_active'  => 1,
+                'is_active' => 1,
             ]);
         });
     }

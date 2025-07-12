@@ -1,19 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AppContext} from '@/AppContext';
-import {faSearch} from '@fortawesome/free-solid-svg-icons';
 import Hr from '@/Components/Hr.jsx';
 import FilterBadges from '@/Components/Shops/FilterBadges.jsx';
-import TextInput from '@/Components/Form/TextInput.jsx';
 import Loading from '@/Components/Loading.jsx';
 import ShopBlock from '@/Components/Shops/ShopBlock.jsx';
 import {AnimatePresence} from 'framer-motion';
-import Card from '@/Components/Card.jsx';
 import PrimaryButton from '@/Components/Form/Buttons/PrimaryButton.jsx';
 import FlipWords from '@/Components/UI/flipwords.jsx';
-import {Checkbox} from 'antd';
-import Field from '@/Components/Form/Field.jsx';
-import {ShopTypeIcons} from '@/Components/Icons/ShopTypes/index.js';
-import useSwipe from '@/Components/hooks/useSwipe';
+import SwipeableContainer from '@/Components/UI/SwipeableContainer.jsx';
+import ShopSearchComponent from '@/Pages/Shops/Components/ShopSearchComponent.jsx';
 
 export default function Index({types, predefined_locations = []}) {
     const [shops, setShops] = useState([]);
@@ -32,25 +27,10 @@ export default function Index({types, predefined_locations = []}) {
         type: '',
         contact_method: '',
         predefined_location: '',
-        rating_min: 0,
-        rating_max: 5,
+        rating_min: null,
+        rating_max: null,
     });
     const {api} = useContext(AppContext);
-
-    // Setup swipe handler for pagination
-    const { touchRef: swipeRef } = useSwipe({
-        onSwipeLeft: () => {
-            if (pagination.current_page < pagination.last_page) {
-                goToNextPage();
-            }
-        },
-        onSwipeRight: () => {
-            if (pagination.current_page > 1) {
-                goToPreviousPage();
-            }
-        },
-        threshold: 80,
-    });
 
     useEffect(() => {
         fetchShops();
@@ -92,25 +72,35 @@ export default function Index({types, predefined_locations = []}) {
         }
     };
 
+    const [swiping, setSwiping] = useState(false);
+
     const goToNextPage = () => {
-        if (pagination.current_page < pagination.last_page) {
+        if (pagination.current_page < pagination.last_page && !swiping) {
+            console.log(`Navigating to next page: ${pagination.current_page + 1}`);
+            setSwiping(true);
             setFilters(prev => ({
                 ...prev,
-                page: pagination.current_page + 1
+                page: pagination.current_page + 1,
             }));
+            // Reset swiping state after navigation completes
+            setTimeout(() => setSwiping(false), 500);
         }
     };
 
     const goToPreviousPage = () => {
-        if (pagination.current_page > 1) {
+        if (pagination.current_page > 1 && !swiping) {
+            console.log(`Navigating to previous page: ${pagination.current_page - 1}`);
+            setSwiping(true);
             setFilters(prev => ({
                 ...prev,
-                page: pagination.current_page - 1
+                page: pagination.current_page - 1,
             }));
+            // Reset swiping state after navigation completes
+            setTimeout(() => setSwiping(false), 500);
         }
     };
 
-    return <>
+    return <div className={'dark:bg-background bg-white'}>
         <div className="container mt-32 mx-auto p-4">
 
             <div className={'max-w-4xl my-20 mb-32 dark:drop-shadow-[0_0px_100px_#fff] drop-shadow-[0_0px_100px_#acf] mx-auto text-center'}>
@@ -133,127 +123,12 @@ export default function Index({types, predefined_locations = []}) {
             </div>
 
 
-            <div className={'flex w-full items-start'}>
-                <div className={'bg-grad-primary rounded-xl shadow-sm w-2/6 p-8 pt-0'}>
+            <div className={'flex bg-card shadow-xl shadow-black/5 w-full'}>
+                <div className={'w-2/6 p-8 pt-0'}>
                     <div className={'sticky top-32'}>
-                        <h3>Filter Shops</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextInput
-                                type="text"
-                                placeholder="Shop Name"
-                                defaultValue={filters.title}
-                                handleChange={(e) => setFilters(
-                                    {...filters, title: e.target.value})}
-                            />
-                        </div>
-                        <Field title={'Location'}
-                               collapsable
-                               className={'px-0'}
-                               childrenClassName={'flex flex-wrap'}>
-                            {predefined_locations?.data?.map((location) => (
-                                <div className={'w-1/2 px-2 whitespace-nowrap'}>
-                                    <Checkbox key={location.id}
-                                              value={location.id}
-                                              onChange={(e) => setFilters({
-                                                  ...filters,
-                                                  predefined_location: e.target.checked
-                                                      ? filters.predefined_location
-                                                          ? filters.predefined_location +
-                                                          ',' + location.id.toString()
-                                                          : location.id.toString()
-                                                      : filters.predefined_location.split(
-                                                          ',').
-                                                          filter(t => t !==
-                                                              location.id.toString()).
-                                                          join(','),
-                                              })}
-                                    >{location.name}</Checkbox>
-                                </div>
-                            ))}
-                        </Field>
-                        <Hr/>
-                        <Field title={'Type of Service'}
-                               className={'px-0'}
-                               collapsable
-                               childrenClassName={'flex flex-wrap my-5'}>
-
-                            {types.map((type) => {
-                                const IconComponent = ShopTypeIcons[type.id];
-                                return <div className={'w-1/2 px-2 whitespace-nowrap'}>
-                                    <Checkbox
-                                        value={type.id}
-                                        defaultChecked={filters.type === type.id.toString()}
-                                        onChange={(e) => setFilters({
-                                            ...filters,
-                                            type: e.target.checked
-                                                ? filters.type
-                                                    ? filters.type + ',' + type.id.toString()
-                                                    : type.id.toString()
-                                                : filters.type.split(',').
-                                                    filter(t => t !== type.id.toString()).join(','),
-                                        })}
-                                    >
-                                        {IconComponent && <IconComponent className="w-4 h-4 inline-block mr-2 -mt-0.5"/>}
-                                        {type.title}
-                                    </Checkbox>
-                                </div>;
-                            })}
-                        </Field>
-
-                        <Field title={'Rating'}
-                               className={'px-0'}
-                               collapsable
-                               childrenClassName={'my-5'}>
-                            <div className="flex flex-col space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm">Min: {filters.rating_min === null ? 'NA' : filters.rating_min} stars</span>
-                                    <span className="text-sm">Max: {filters.rating_max === null ? 'NA' : filters.rating_max} stars</span>
-                                </div>
-                                <div className="flex space-x-4">
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="5"
-                                        step="0.5"
-                                        value={filters.rating_min ?? 0}
-                                        onChange={(e) => setFilters({
-                                            ...filters,
-                                            rating_min: e.target.value === '0' ? null : parseFloat(e.target.value),
-                                            rating_max: e.target.value === '0' ? null : Math.max(parseFloat(e.target.value), filters.rating_max ?? 5),
-                                        })}
-                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                    />
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="5"
-                                        step="0.5"
-                                        value={filters.rating_max ?? 5}
-                                        onChange={(e) => setFilters({
-                                            ...filters,
-                                            rating_max: e.target.value === '5' ? null : parseFloat(e.target.value),
-                                            rating_min: e.target.value === '5' ? null : Math.min(parseFloat(e.target.value), filters.rating_min ?? 0),
-                                        })}
-                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                    />
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-xs">0</span>
-                                    <span className="text-xs">1</span>
-                                    <span className="text-xs">2</span>
-                                    <span className="text-xs">3</span>
-                                    <span className="text-xs">4</span>
-                                    <span className="text-xs">5</span>
-                                </div>
-                            </div>
-                        </Field>
-                        <PrimaryButton
-                            className="mt-4"
-                            icon={faSearch}
-                            onClick={fetchShops}
-                        >
-                            Search
-                        </PrimaryButton></div>
+                        <ShopSearchComponent filters={filters}
+                                             setFilters={setFilters} predefined_locations={predefined_locations} types={types} fetchShops={fetchShops}/>
+                    </div>
                 </div>
 
                 <div className={'w-4/6 px-10'}>
@@ -277,14 +152,28 @@ export default function Index({types, predefined_locations = []}) {
                             </div>
                         ) : shops.length > 0 ? (
                             <>
-                                <div
-                                    ref={swipeRef}
-                                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 py-20">
-                                    {shops.map(
-                                        (shop) => <ShopBlock
-                                            shop={shop}
-                                            key={shop.id}/>)}
-                                </div>
+                                <SwipeableContainer
+                                    onSwipeLeft={() => {
+                                        if (pagination.current_page < pagination.last_page) {
+                                            goToNextPage();
+                                        }
+                                    }}
+                                    onSwipeRight={() => {
+                                        if (pagination.current_page > 1) {
+                                            goToPreviousPage();
+                                        }
+                                    }}
+                                    canSwipeLeft={pagination.current_page < pagination.last_page}
+                                    canSwipeRight={pagination.current_page > 1}
+                                    className="min-h-[50vh] w-full">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 py-20">
+                                        {shops.map(
+                                            (shop) => <ShopBlock
+                                                shop={shop}
+                                                key={shop.id}/>)}
+                                    </div>
+                                </SwipeableContainer>
+
 
                                 <Hr className={'my-20'}/>
                                 <div className="text-center mb-6">
@@ -293,11 +182,17 @@ export default function Index({types, predefined_locations = []}) {
                                     </div>
                                     <div className="flex items-center justify-center gap-2">
                                         {pagination.current_page > 1 && (
-                                            <div className="text-primary text-sm">← Previous page</div>
+                                            <button
+                                                onClick={goToPreviousPage}
+                                                className="text-primary text-sm hover:underline cursor-pointer"
+                                            >← Previous page</button>
                                         )}
                                         <span className="text-gray-400 mx-2">Page {pagination.current_page} of {pagination.last_page}</span>
                                         {pagination.current_page < pagination.last_page && (
-                                            <div className="text-primary text-sm">Next page →</div>
+                                            <button
+                                                onClick={goToNextPage}
+                                                className="text-primary text-sm hover:underline cursor-pointer"
+                                            >Next page →</button>
                                         )}
                                     </div>
                                 </div>
@@ -340,20 +235,20 @@ export default function Index({types, predefined_locations = []}) {
             </div>
 
 
-            <Hr className={'my-14 max-w-xs mx-auto'}/>
+            <Hr className={'my-32 max-w-xs mx-auto'}/>
             <div>
-                <Card
-                    className={'max-w-md mx-auto'} header={
-                    <h2 className={'font-black'}>
-                        Ready To Get Started?</h2>
-                }>
-                    <p>Join thousands of satisfied customers who trust our
-                        premium automotive partners</p>
+                <div className={'container text-center'}>
+                    <h2 className={'font-black text-6xl'}>
+                        Ready To Get Started?
+                    </h2>
+                    
+                    <p>Join thousands of satisfied customers who trust our premium automotive partners</p>
+
                     <div className={'my-10 flex items-center justify-center'}>
                         <PrimaryButton>Create a Shop</PrimaryButton>
                     </div>
-                </Card>
+                </div>
             </div>
         </div>
-    </>;
+    </div>;
 }

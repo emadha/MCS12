@@ -67,15 +67,21 @@ class Shop extends Base
     protected $fillable
         = [
             'user_id',
-            'username',
+
             'title',
+            'slogan',
             'description',
+
             'opening_hour',
             'closing_hour',
             'opening_days',
+
             'predefined_location',
-            'is_open',
+
+            'is_published',
             'is_active',
+            'is_approved',
+
             'established_at',
         ];
 

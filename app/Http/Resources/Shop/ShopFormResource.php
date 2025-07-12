@@ -22,6 +22,10 @@ class ShopFormResource extends JsonResource
             'primary_photo' => $this->primary_photo?->path,
             'types'         => $this->types->pluck('id'),
             'contacts'      => ContactResource::collection($this->contacts),
+            'opening_hour'  => $this->opening_hour,
+            'closing_hour'  => $this->closing_hour,
+            'opening_days'  => $this->opening_days,
+            'established_at' => $this->established_at?->format('Y-m-d'),
         ];
     }
 

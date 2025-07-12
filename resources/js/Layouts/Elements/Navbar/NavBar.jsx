@@ -80,7 +80,7 @@ export default function NavBar({className}) {
                         </AppLink>
 
                         <Link
-                            className={'hidden sm:inline-block font-black select-none whitespace-nowrap transition-all text-5xl ' +
+                            className={'font-display hidden sm:inline-block font-black select-none whitespace-nowrap transition-all text-5xl ' +
                                 brandClassName}
                             href={'/'}>
 

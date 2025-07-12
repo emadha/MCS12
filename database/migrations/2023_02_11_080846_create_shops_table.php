@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate();
 
             $table->string('title');
+            $table->string('slogan');
             $table->text('description');
 
             $table->tinyInteger('is_physical')->default(1);
@@ -32,8 +33,6 @@ return new class extends Migration {
             $table->time('opening_hour')->nullable();
             $table->time('closing_hour')->nullable();
             $table->json('opening_days')->nullable();
-
-            $table->tinyInteger('is_open')->default(1);
 
             $table->boolean('is_published')->default(true);
             $table->boolean('is_active')->default(true);

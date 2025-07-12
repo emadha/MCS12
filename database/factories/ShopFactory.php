@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\PredefinedLocation;
 use App\Models\Shop;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,6 +21,8 @@ class ShopFactory extends Factory
     {
         return [
             'title' => $this->faker->text(rand(5, 100)),
+            'slogan' => $this->faker->paragraph,
+            'predefined_location' => PredefinedLocation::where('region', config('site.regions.current'))->inRandomOrder()->first()->id,
             'is_active' => true,
             'user_id' => rand(1, 10),
             'is_published' => true,

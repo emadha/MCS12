@@ -65,7 +65,6 @@ export default function Index({
                     promotedShowrooms={promotedShowrooms}
                     loadingShowrooms={loadingShowrooms}/>
 
-                <Hr className={'my-24 mb-20 max-w-32 mx-auto'}/>
                 <ListingContainer
                     type={'cars'}
                     hasSearch={true}/>

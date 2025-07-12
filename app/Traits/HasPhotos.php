@@ -58,7 +58,7 @@ trait HasPhotos
     }
 
     /**
-     * @param  Photo  $photo
+     * @param Photo $photo
      *
      * @return Photo
      */
@@ -66,8 +66,8 @@ trait HasPhotos
     {
         // Set all to false
         Photo::where([
-            'item_id'    => $this->id,
-            'item_type'  => get_class($this),
+            'item_id' => $this->id,
+            'item_type' => get_class($this),
             'is_primary' => true,
         ])->update(['is_primary' => false]);
 
@@ -80,11 +80,11 @@ trait HasPhotos
     }
 
     /**
-     * @param  Photo  $photo
+     * @param Photo $photo
      *
-     * @return Photo
+     * @return object
      */
-    public function setPhotoToCover(Photo $photo): Photo
+    public function setPhotoToCover(Photo $photo): object
     {
         $SelectedPhoto = $this->photos()->find($photo->id);
         $SelectedPhoto->is_cover = true;
@@ -93,6 +93,8 @@ trait HasPhotos
         return $SelectedPhoto;
     }
 
-    public function generatePhotoThumbs(Photo $photo) {}
+    public function generatePhotoThumbs(Photo $photo)
+    {
+    }
 
 }

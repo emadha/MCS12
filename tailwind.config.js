@@ -22,7 +22,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ["Fira Sans", "sans-serif"],
-                display: ["Poppins", "sans-serif"],
+                display: ["Funnel Display", "sans-serif"],
                 mono: ["JetBrains Mono", "Fira Code", "monospace"],
             },
             colors: {
